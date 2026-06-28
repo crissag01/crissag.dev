@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(dir \"c:\\\\Users\\\\criss\\\\Downloads\\\\Proyectos personales\\\\Wallpaper Engine\")",
-      "Bash(pip index *)",
-      "Bash(pip install *)"
-    ]
-  }
-}
