@@ -1,0 +1,584 @@
+﻿{
+  "name": "Organizador de metricas y respuestas (Apr 8 at 20:57:20)",
+  "nodes": [
+    {
+      "parameters": {
+        "form": "260204193570046",
+        "onlyAnswers": false
+      },
+      "type": "n8n-nodes-base.jotFormTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -32
+      ],
+      "id": "54006500-1972-489a-9828-62c9d73b31b3",
+      "name": "1.-Obtener datos de JotForm",
+      "webhookId": "REDACTED_WEBHOOK_ID",
+      "credentials": {
+        "jotFormApi": {
+          "id": "wT4R17uc1CyqPe2E",
+          "name": "JotForm account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "search",
+        "returnAll": true,
+        "term": "={{ $json['Correo ElectrÃ³nico'] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -32
+      ],
+      "id": "ed3cc641-0fd3-48a7-88df-2a0bcb398d00",
+      "name": "Buscar cliente",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88e53c2b-baaa-44e7-8584-3c9174ab8dab",
+              "name": "Nombre Completo",
+              "value": "={{ $json.rawRequest['Nombre completo'].first }} {{ $json.rawRequest['Nombre completo'].last }}",
+              "type": "string"
+            },
+            {
+              "id": "ce1fb48c-fd12-4dc2-9dce-98411f2fd5c9",
+              "name": "Telefono",
+              "value": "={{ $json.rawRequest.Telefono.full }}",
+              "type": "string"
+            },
+            {
+              "id": "04d309cf-f643-4495-8266-4ccfacd8bb88",
+              "name": "Correo ElectrÃ³nico",
+              "value": "={{ $json.rawRequest['Correo Electronico'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2f3e4b40-08af-425f-84e2-348386c9dabb",
+              "name": "Edad",
+              "value": "={{ $json.rawRequest['Edad del titular'] }}",
+              "type": "string"
+            },
+            {
+              "id": "af9155d3-0a85-4e56-932c-e556eafd8755",
+              "name": "Ciudad / Estado",
+              "value": "={{ $json.rawRequest['Ciudad / Estado'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bb4c76d5-ab15-461a-897f-b7dd7d6e0023",
+              "name": "Â¿Tiene seguro actualmente?",
+              "value": "={{ $json.rawRequest['Â¿Tienes seguro actualmente?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ca38f275-4899-4ae9-8aba-8a4e6e2b8cce",
+              "name": "CampaÃ±a UTM",
+              "value": "={{ $json.rawRequest.utm_campaign }}",
+              "type": "string"
+            },
+            {
+              "id": "d49483fb-9d08-4b18-a5d2-e2a7d942b131",
+              "name": "Canal de origen",
+              "value": "={{ $json.rawRequest.canal_origen }}",
+              "type": "string"
+            },
+            {
+              "id": "16303286-2569-4860-95f3-f2c0a99ce830",
+              "name": "Producto",
+              "value": "={{ $json.rawRequest.producto }}",
+              "type": "string"
+            },
+            {
+              "id": "e81a1609-d904-4c11-8168-25a69a4c14f9",
+              "name": "DirecciÃ³n IP",
+              "value": "={{ $json.ip }}",
+              "type": "string"
+            },
+            {
+              "id": "74410cfe-98f8-4fc6-98be-ba092b25f253",
+              "name": "ID de solicitud",
+              "value": "={{ $json.submissionID }}",
+              "type": "string"
+            },
+            {
+              "id": "2163be23-d694-49f0-9ed2-7405c47d78a8",
+              "name": "Titulo del formulario",
+              "value": "={{ $json.formTitle }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        -32
+      ],
+      "id": "fc8a942a-7137-4bf7-9509-df6c7d8bb49f",
+      "name": "Limpiar datos"
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "name": "={{ $json.item.name }}",
+        "additionalFields": {
+          "customProperties": {
+            "property": [
+              {
+                "name": "cc49601f7257851959d08f65019b7d718267c37e",
+                "value": "={{ $('Limpiar datos').item.json.Edad }}"
+              },
+              {
+                "name": "a3c4d9c5393ce5f896d66afca4ea0271be5c4b0e",
+                "value": "={{ $('Limpiar datos').item.json['Canal de origen'] }}"
+              },
+              {
+                "name": "cd8a63a78d3664055255c98cd9386bd87a604938",
+                "value": "=Formulario {{ $('Limpiar datos').item.json['Titulo del formulario'] }}"
+              }
+            ]
+          },
+          "email": [
+            "={{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}"
+          ],
+          "phone": [
+            "={{ $('Limpiar datos').item.json.Telefono }}"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        64
+      ],
+      "id": "560eb71a-2500-4227-a8c6-f9287a7de4c8",
+      "name": "Create a person",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Limpiar datos').item.json.Producto }} {{ $('Limpiar datos').item.json['Titulo del formulario'] }}",
+        "associateWith": "person",
+        "person_id": "={{ $json.id }}",
+        "additionalFields": {
+          "customProperties": {
+            "property": [
+              {
+                "name": "4a13c4f82672fa756be910a9757cad1c1ab59699",
+                "value": "={{ $('Limpiar datos').item.json['Canal de origen'] }}"
+              },
+              {
+                "name": "a40656fd00fb4b806def757e4f13c13cd97842ce",
+                "value": "Social"
+              },
+              {
+                "name": "23c0642c996cf69bdcd1b97805d53a6a4c19bdb5",
+                "value": "={{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}"
+              },
+              {
+                "name": "a9015c565e95c0d032cee84ef58086c499ad46e5",
+                "value": "video1"
+              },
+              {
+                "name": "445bb0c8b32b1bd7d369da753de27deafccb15c8",
+                "value": "={{ $('Limpiar datos').item.json['Titulo del formulario'] }}"
+              },
+              {
+                "name": "ddcdcf8631518c321876f4ebb1ce8f8c75201672",
+                "value": "={{ $('Limpiar datos').item.json['Canal de origen'] }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -128
+      ],
+      "id": "3734ca3c-7e43-41f9-ac6f-fdd4b34e99a9",
+      "name": "Create a deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}",
+                    "rightValue": "={{ $json.emails[0] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e201257a-b700-4fa3-b50d-cc42bb0b418f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ya registrado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "44ac72ed-fe8c-47cd-8c5f-d50f7c2382a1",
+                    "leftValue": "={{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}",
+                    "rightValue": "={{ $json.emails[0] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEquals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No registrado"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        944,
+        -32
+      ],
+      "id": "cff41157-6067-4d5e-90e0-ada3e9d36e1c",
+      "name": "Verificar cliente"
+    },
+    {
+      "parameters": {
+        "content": "Al llenarse el formulario de jotform se iniciara el flujo y se verificara is llegan datos o el formulario esta vacio para despuÃ©s pasar a la bÃºsqueda del cliente y dependiendo del resultado de la busqueda la verificaciÃ³n realizara una acciÃ³n distinta:\n\n- Si el resultado muestra que el cliente ya existe entonces solo se creara un nuevo negocio en pipedive con sus datos\n- Pero si en dado caso el resultado muestra que el cliente no existe entonces se creara a una persona nueva en pipedrive con sus datos",
+        "height": 416,
+        "width": 1984
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -192
+      ],
+      "id": "25f6e979-da19-4bf3-aa34-edc5cc802d93",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "resource": "note",
+        "content": "=Resumen del lead\n\nProducto: {{ $('Limpiar datos').item.json.Producto }}\nCanal: {{ $('Limpiar datos').item.json['Canal de origen'] }}\nUTM Source: facebook\nUTM Medium: chatbot\nUTM Campaign: {{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}\nAnuncio: video_02\nLlenado por: bot\n\nNombre: {{ $('Limpiar datos').item.json['Nombre Completo'] }}\nCorreo: {{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}\nTelÃ©fono: {{ $('Limpiar datos').item.json.Telefono }}\n\nRespuestas del formulario:\n- Nombre Completo: {{ $('Limpiar datos').item.json['Nombre Completo'] }}\n- Telefono: {{ $('Limpiar datos').item.json.Telefono }}\n- Correp: {{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}\n- Edad: {{ $('Limpiar datos').item.json.Edad }}\n- Ciudad / Estado: {{ $('Limpiar datos').item.json['Ciudad / Estado'] }}\n- Â¿Tiene seguro actualmente?: {{ $('Limpiar datos').item.json['Â¿Tiene seguro actualmente?'] }}\n- CampaÃ±a UTM: {{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}\n- Canal de origen: {{ $('Limpiar datos').item.json['Canal de origen'] }}\n- Producto: {{ $('Limpiar datos').item.json.Producto }}",
+        "additionalFields": {
+          "deal_id": "={{ $json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        -128
+      ],
+      "id": "6c261d0a-d7f8-4bca-af15-771cf714a341",
+      "name": "Create a note",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Limpiar datos').item.json.Producto }} {{ $('Limpiar datos').item.json['Titulo del formulario'] }}",
+        "associateWith": "person",
+        "person_id": "={{ $json.id }}",
+        "additionalFields": {
+          "customProperties": {
+            "property": [
+              {
+                "name": "4a13c4f82672fa756be910a9757cad1c1ab59699",
+                "value": "={{ $('Limpiar datos').item.json['Canal de origen'] }}"
+              },
+              {
+                "name": "a40656fd00fb4b806def757e4f13c13cd97842ce",
+                "value": "google"
+              },
+              {
+                "name": "23c0642c996cf69bdcd1b97805d53a6a4c19bdb5",
+                "value": "={{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}"
+              },
+              {
+                "name": "a9015c565e95c0d032cee84ef58086c499ad46e5",
+                "value": "gmm"
+              },
+              {
+                "name": "445bb0c8b32b1bd7d369da753de27deafccb15c8",
+                "value": "={{ $('Limpiar datos').item.json['Titulo del formulario'] }}"
+              },
+              {
+                "name": "ddcdcf8631518c321876f4ebb1ce8f8c75201672",
+                "value": "={{ $('Limpiar datos').item.json['Canal de origen'] }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        64
+      ],
+      "id": "a8d2b6ec-f59d-45cf-97ce-8e7875e444e8",
+      "name": "Create a deal1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "note",
+        "content": "=Resumen del lead\n\nProducto: {{ $('Limpiar datos').item.json.Producto }}\nCanal: {{ $('Limpiar datos').item.json['Canal de origen'] }}\nUTM Source: facebook\nUTM Medium: chatbot\nUTM Campaign: {{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}\nAnuncio: video_02\nLlenado por: bot\n\nNombre: {{ $('Limpiar datos').item.json['Nombre Completo'] }}\nCorreo: {{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}\nTelÃ©fono: {{ $('Limpiar datos').item.json.Telefono }}\n\nRespuestas del formulario:\n- Nombre Completo: {{ $('Limpiar datos').item.json['Nombre Completo'] }}\n- Telefono: {{ $('Limpiar datos').item.json.Telefono }}\n- Correp: {{ $('Limpiar datos').item.json['Correo ElectrÃ³nico'] }}\n- Edad: {{ $('Limpiar datos').item.json.Edad }}\n- Ciudad / Estado: {{ $('Limpiar datos').item.json['Ciudad / Estado'] }}\n- Â¿Tiene seguro actualmente?: {{ $('Limpiar datos').item.json['Â¿Tiene seguro actualmente?'] }}\n- CampaÃ±a UTM: {{ $('Limpiar datos').item.json['CampaÃ±a UTM'] }}\n- Canal de origen: {{ $('Limpiar datos').item.json['Canal de origen'] }}\n- Producto: {{ $('Limpiar datos').item.json.Producto }}",
+        "additionalFields": {
+          "deal_id": "={{ $json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        64
+      ],
+      "id": "b4e00e38-0799-4ffe-8275-346df0e6b7b8",
+      "name": "Create a note1",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "L8PXZalI61ij2zsa",
+          "name": "Pipedrive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bda25c30-0095-42b4-832f-a781ed46849f",
+              "leftValue": "={{$('1.-Obtener datos de JotForm').item.json.webhookURL}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f2469e74-50f5-4dc5-ba4e-6fbe00180c85",
+              "leftValue": "={{$('1.-Obtener datos de JotForm').item.json.webhookURL}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        192,
+        -32
+      ],
+      "id": "3faed491-5ed1-4dba-99d3-8c6c7060f968",
+      "name": "Verificar si llegan datos vacios"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        288,
+        112
+      ],
+      "id": "39f6170b-a3c3-4a09-9c21-60232e3e1670",
+      "name": "Si no hay datos no hacer nada"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "1.-Obtener datos de JotForm": {
+      "main": [
+        [
+          {
+            "node": "Verificar si llegan datos vacios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar cliente": {
+      "main": [
+        [
+          {
+            "node": "Verificar cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar datos": {
+      "main": [
+        [
+          {
+            "node": "Buscar cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar cliente": {
+      "main": [
+        [
+          {
+            "node": "Create a deal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a deal": {
+      "main": [
+        [
+          {
+            "node": "Create a note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a person": {
+      "main": [
+        [
+          {
+            "node": "Create a deal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a deal1": {
+      "main": [
+        [
+          {
+            "node": "Create a note1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar si llegan datos vacios": {
+      "main": [
+        [
+          {
+            "node": "Limpiar datos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Si no hay datos no hacer nada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "52c31ba4-e499-4ecc-b613-af23c48335f5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "11b2444ebdf37e1adba22617df3ef520a982fbdb367b9495bda4df5a719f04b6"
+  },
+  "id": "n1gPP44v7SOePP7q",
+  "tags": []
+}

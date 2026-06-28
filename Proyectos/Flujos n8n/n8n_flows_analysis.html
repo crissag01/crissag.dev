@@ -1,0 +1,199 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--g900:#0a1a0f;--g800:#0f2918;--g700:#1a3d22;--g600:#22522e;--g500:#2d6b3c;--g400:#3a8a4e;--g300:#52b36b;--g200:#7ed49a;--dark:#060e08;--card:#111c13;--border:#1e3a23;--text:#e8f5ea;--muted:#8ab892;--amber:#c8b250;--amberBg:#1a1a0f;--amberBorder:#3a3010;--red:#e05555;--redBg:#1a0808;--redBorder:#3a1010}
+body{background:var(--dark);color:var(--text);font-family:system-ui,sans-serif;padding:1.5rem}
+h2{font-size:1.4rem;font-weight:700;color:var(--g200);margin-bottom:.3rem}
+.sub{color:var(--muted);font-size:.85rem;margin-bottom:1.5rem}
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:2rem}
+.flow-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+.flow-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem}
+.flow-name{font-size:.95rem;font-weight:700;color:var(--text)}
+.flow-nodes{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.badge{padding:.2rem .6rem;border-radius:6px;font-size:.72rem;font-weight:700}
+.badge-high{background:var(--g800);color:var(--g200);border:1px solid var(--g600)}
+.badge-mid{background:var(--amberBg);color:var(--amber);border:1px solid var(--amberBorder)}
+.badge-low{background:var(--redBg);color:var(--red);border:1px solid var(--redBorder)}
+.flow-tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.8rem}
+.tag{background:var(--g900);color:var(--g300);border:1px solid var(--border);border-radius:4px;padding:.15rem .5rem;font-size:.72rem}
+.tag-ai{background:#0d1a2a;color:#7aafea;border-color:#1a3a5a}
+.flow-desc{font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:.8rem}
+.flow-price{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:var(--g900);border-radius:8px;border:1px solid var(--border)}
+.price-label{font-size:.75rem;color:var(--muted)}
+.price-val{font-size:1rem;font-weight:700;color:var(--g200)}
+.section-title{font-size:1rem;font-weight:700;color:var(--g200);margin:1.5rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+.pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.col-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+.col-title{font-size:.8rem;font-weight:700;margin-bottom:.6rem}
+.col-green{color:var(--g300)}
+.col-amber{color:var(--amber)}
+ul{list-style:none;padding:0}
+li{font-size:.82rem;color:var(--muted);padding:.25rem 0;display:flex;gap:.4rem;line-height:1.5}
+li::before{flex-shrink:0}
+.li-green::before{content:"✓";color:var(--g300)}
+.li-warn::before{content:"⚠";color:var(--amber)}
+.strategy{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.5rem}
+.strat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+.strat-icon{font-size:1.4rem;margin-bottom:.4rem}
+.strat-name{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.strat-desc{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:.5rem}
+.strat-price{font-size:.95rem;font-weight:700;color:var(--g200)}
+.summary-bar{background:var(--g900);border:1px solid var(--g700);border-radius:10px;padding:1.1rem;display:flex;gap:2rem;flex-wrap:wrap}
+.sum-item .sum-num{font-size:1.6rem;font-weight:800;color:var(--g300)}
+.sum-item .sum-label{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+</style>
+
+<h2>Análisis comercial · Flujos n8n</h2>
+<p class="sub">5 flujos analizados · Tecnologías: OpenAI, WhatsApp, Telegram, Google Sheets, Pipedrive, Gmail</p>
+
+<div class="summary-bar" style="margin-bottom:1.5rem">
+  <div class="sum-item"><div class="sum-num">5</div><div class="sum-label">Flujos totales</div></div>
+  <div class="sum-item"><div class="sum-num">3</div><div class="sum-label">Con IA (OpenAI)</div></div>
+  <div class="sum-item"><div class="sum-num">4</div><div class="sum-label">Comercializables ya</div></div>
+  <div class="sum-item"><div class="sum-num">$500–2k</div><div class="sum-label">Precio por flujo (MXN/USD)</div></div>
+</div>
+
+<div class="flow-grid">
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <div>
+        <div class="flow-name">📧 ASSISTCARD · Recepción v2</div>
+        <div class="flow-nodes">37 nodos · 32 conexiones · Más complejo</div>
+      </div>
+      <span class="badge badge-high">⭐ Alto potencial</span>
+    </div>
+    <div class="flow-tags">
+      <span class="tag">Google Sheets</span><span class="tag">Google Drive</span>
+      <span class="tag">Email</span><span class="tag">HTTP API</span><span class="tag">Lógica condicional</span>
+    </div>
+    <div class="flow-desc">El más sofisticado del portafolio. Recibe formularios, busca clientes, genera cotizaciones PDF automáticas, las sube a Drive, envía correos con adjuntos y hace seguimiento por estado (cotizado/pendiente/finish). Maneja múltiples estados y lógica de días (180/365).</div>
+    <div class="flow-price">
+      <div><div class="price-label">Setup único</div><div class="price-val">$8,000–15,000 MXN</div></div>
+      <div><div class="price-label">Mantenimiento/mes</div><div class="price-val">$1,500 MXN</div></div>
+    </div>
+  </div>
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <div>
+        <div class="flow-name">🤖 Bitácora · Agente WhatsApp</div>
+        <div class="flow-nodes">21 nodos · IA con memoria Postgres</div>
+      </div>
+      <span class="badge badge-high">⭐ Alto potencial</span>
+    </div>
+    <div class="flow-tags">
+      <span class="tag-ai tag">GPT-4 Agent</span><span class="tag-ai tag">Memoria Postgres</span>
+      <span class="tag">WhatsApp</span><span class="tag">Gmail</span><span class="tag">Google Sheets</span>
+    </div>
+    <div class="flow-desc">Asistente IA conversacional con memoria persistente. Recibe mensajes de voz (los transcribe con Whisper), gestiona tareas, asigna responsables, actualiza estados y envía recordatorios por correo. El más avanzado técnicamente del portafolio.</div>
+    <div class="flow-price">
+      <div><div class="price-label">Setup único</div><div class="price-val">$12,000–20,000 MXN</div></div>
+      <div><div class="price-label">Mantenimiento/mes</div><div class="price-val">$2,000–3,000 MXN</div></div>
+    </div>
+  </div>
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <div>
+        <div class="flow-name">📄 Facturas · Telegram</div>
+        <div class="flow-nodes">18 nodos funcionales · GPT extracción</div>
+      </div>
+      <span class="badge badge-high">Alto potencial</span>
+    </div>
+    <div class="flow-tags">
+      <span class="tag">Telegram Bot</span><span class="tag-ai tag">OpenAI</span>
+      <span class="tag">Google Sheets</span><span class="tag">HTTP</span>
+    </div>
+    <div class="flow-desc">Recibe facturas por Telegram, las procesa con IA (extrae datos estructurados), y los registra en Google Sheets. Muy replicable para contadores, despachos y PyMEs que manejan volumen de facturas.</div>
+    <div class="flow-price">
+      <div><div class="price-label">Setup único</div><div class="price-val">$5,000–8,000 MXN</div></div>
+      <div><div class="price-label">Mantenimiento/mes</div><div class="price-val">$1,000 MXN</div></div>
+    </div>
+  </div>
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <div>
+        <div class="flow-name">📲 Facturas · WhatsApp</div>
+        <div class="flow-nodes">17 nodos funcionales · Versión WhatsApp</div>
+      </div>
+      <span class="badge badge-high">Alto potencial</span>
+    </div>
+    <div class="flow-tags">
+      <span class="tag">WhatsApp API</span><span class="tag-ai tag">OpenAI</span>
+      <span class="tag">Google Sheets</span><span class="tag">Webhook</span>
+    </div>
+    <div class="flow-desc">Mismo flujo de facturas pero por WhatsApp, el canal favorito en México. Recibe el documento, extrae datos con LLM y organiza en Sheets con confirmación automática al usuario. Mayor penetración de mercado por el canal.</div>
+    <div class="flow-price">
+      <div><div class="price-label">Setup único</div><div class="price-val">$5,000–8,000 MXN</div></div>
+      <div><div class="price-label">Mantenimiento/mes</div><div class="price-val">$1,000 MXN</div></div>
+    </div>
+  </div>
+
+  <div class="flow-card">
+    <div class="flow-header">
+      <div>
+        <div class="flow-name">📊 Organizador · JotForm + Pipedrive</div>
+        <div class="flow-nodes">11 nodos · Sin IA</div>
+      </div>
+      <span class="badge badge-mid">Potencial medio</span>
+    </div>
+    <div class="flow-tags">
+      <span class="tag">JotForm</span><span class="tag">Pipedrive CRM</span><span class="tag">Leads</span>
+    </div>
+    <div class="flow-desc">Captura leads de JotForm, los busca en Pipedrive, crea personas/deals/notas automáticamente. Nicho específico (usuarios de Pipedrive), pero muy útil para equipos de ventas. Lógica de deduplicación incluida.</div>
+    <div class="flow-price">
+      <div><div class="price-label">Setup único</div><div class="price-val">$3,500–5,000 MXN</div></div>
+      <div><div class="price-label">Mantenimiento/mes</div><div class="price-val">$800 MXN</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-title">Estrategias de comercialización</div>
+<div class="strategy">
+  <div class="strat-card">
+    <div class="strat-icon">🎯</div>
+    <div class="strat-name">Venta directa por flujo</div>
+    <div class="strat-desc">Ofreces cada flujo como producto llave en mano: instalación, configuración y capacitación incluida. Ideal para empezar.</div>
+    <div class="strat-price">$5k–20k MXN por cliente</div>
+  </div>
+  <div class="strat-card">
+    <div class="strat-icon">🔄</div>
+    <div class="strat-name">Modelo retainer/SaaS</div>
+    <div class="strat-desc">Cobras mensualidad por mantenimiento, actualizaciones y soporte. 5 clientes activos = ingreso recurrente estable.</div>
+    <div class="strat-price">$800–3,000 MXN/mes c/u</div>
+  </div>
+  <div class="strat-card">
+    <div class="strat-icon">📦</div>
+    <div class="strat-name">Paquete industria</div>
+    <div class="strat-desc">Bundle "Sistema de facturación automática" (Telegram + WhatsApp + Sheets). Precio superior por valor combinado.</div>
+    <div class="strat-price">$15k–25k MXN el paquete</div>
+  </div>
+</div>
+
+<div class="section-title">Fortalezas y puntos a mejorar</div>
+<div class="pros-cons">
+  <div class="col-card">
+    <div class="col-title col-green">✓ Fortalezas reales</div>
+    <ul>
+      <li class="li-green">Flujos production-ready, no son prototipos</li>
+      <li class="li-green">Usan canales mexicanos clave (WhatsApp, Telegram)</li>
+      <li class="li-green">IA con memoria persistente (Postgres) — diferenciador fuerte</li>
+      <li class="li-green">Integran herramientas de negocios reales (Pipedrive, Gmail)</li>
+      <li class="li-green">Lógica de estados y manejo de errores presente</li>
+      <li class="li-green">ASSISTCARD demuestra capacidad para proyectos enterprise</li>
+    </ul>
+  </div>
+  <div class="col-card">
+    <div class="col-title col-amber">⚠ Puntos a reforzar</div>
+    <ul>
+      <li class="li-warn">Dependencia de credenciales externas (OpenAI, WhatsApp API)</li>
+      <li class="li-warn">No hay manejo explícito de errores/reintentos en todos los flujos</li>
+      <li class="li-warn">El flujo de Bitácora requiere Postgres activo (costo adicional)</li>
+      <li class="li-warn">Falta documentación de onboarding para el cliente final</li>
+      <li class="li-warn">WhatsApp API tiene costos por mensaje que hay que trasladar</li>
+    </ul>
+  </div>
+</div>

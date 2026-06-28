@@ -1,0 +1,45 @@
+<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="200" fill="#0a0a15"/>
+
+  <!-- Server Tower -->
+  <!-- Rack 1 -->
+  <rect x="80" y="40" width="140" height="35" fill="none" stroke="url(#grad1)" stroke-width="2"/>
+  <circle cx="95" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="115" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="135" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="155" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="175" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="195" cy="57" r="4" fill="url(#grad1)"/>
+  <circle cx="215" cy="57" r="4" fill="#22c55e"/>
+
+  <!-- Rack 2 -->
+  <rect x="80" y="85" width="140" height="35" fill="none" stroke="url(#grad1)" stroke-width="2"/>
+  <circle cx="95" cy="102" r="4" fill="url(#grad1)"/>
+  <circle cx="115" cy="102" r="4" fill="url(#grad1)"/>
+  <circle cx="135" cy="102" r="4" fill="url(#grad1)"/>
+  <circle cx="155" cy="102" r="4" fill="url(#grad1)"/>
+  <circle cx="175" cy="102" r="4" fill="#22c55e"/>
+  <circle cx="195" cy="102" r="4" fill="#4ade80"/>
+  <circle cx="215" cy="102" r="4" fill="url(#grad1)"/>
+
+  <!-- Rack 3 -->
+  <rect x="80" y="130" width="140" height="35" fill="none" stroke="url(#grad1)" stroke-width="2"/>
+  <circle cx="95" cy="147" r="4" fill="url(#grad1)"/>
+  <circle cx="115" cy="147" r="4" fill="#22c55e"/>
+  <circle cx="135" cy="147" r="4" fill="url(#grad1)"/>
+  <circle cx="155" cy="147" r="4" fill="url(#grad1)"/>
+  <circle cx="175" cy="147" r="4" fill="url(#grad1)"/>
+  <circle cx="195" cy="147" r="4" fill="url(#grad1)"/>
+  <circle cx="215" cy="147" r="4" fill="url(#grad1)"/>
+
+  <!-- Storage icon -->
+  <text x="250" y="110" font-size="40" text-anchor="middle">💾</text>
+</svg>

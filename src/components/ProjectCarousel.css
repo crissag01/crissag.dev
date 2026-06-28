@@ -1,0 +1,219 @@
+#projects {
+  padding: 4rem 2rem;
+  background: transparent;
+  text-align: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+#projects h2 {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.carousel-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.project-card {
+  background: rgba(26, 26, 46, 0.4);
+  border: 2px solid #2d2d44;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  animation: slideInUp 0.6s ease-out backwards;
+}
+
+.project-card:nth-child(1) { animation-delay: 0.1s; }
+.project-card:nth-child(2) { animation-delay: 0.2s; }
+.project-card:nth-child(3) { animation-delay: 0.3s; }
+.project-card:nth-child(4) { animation-delay: 0.4s; }
+.project-card:nth-child(5) { animation-delay: 0.5s; }
+.project-card:nth-child(6) { animation-delay: 0.6s; }
+
+.project-card:hover {
+  border-color: #22c55e;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.4);
+  transform: translateY(-8px);
+}
+
+.project-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 66.67%;
+  overflow: hidden;
+  background: #0f0f1e;
+}
+
+.project-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-image {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(167, 139, 250, 0.1);
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.project-card:hover .overlay {
+  background: rgba(167, 139, 250, 0.2);
+}
+
+.project-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-content h3 {
+  font-size: 1.3rem;
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.short-description {
+  color: #b0b0c0;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.expanded-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s ease;
+  margin-top: 0;
+}
+
+.expanded-content.show {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 1rem;
+}
+
+.full-description {
+  color: #c0c0d0;
+  font-size: 0.9rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+}
+
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tech-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  color: #ffffff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.tech-tag:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(167, 139, 250, 0.4);
+}
+
+.project-link {
+  display: inline-block;
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  color: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.project-link:hover {
+  transform: translateX(4px);
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #projects {
+    padding: 2rem 1rem;
+  }
+
+  #projects h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .carousel-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .expanded-content.show {
+    max-height: 600px;
+  }
+}

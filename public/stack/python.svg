@@ -1,0 +1,13 @@
+<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pythonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3776ab;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffd43b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="8" fill="rgba(55, 118, 171, 0.1)" stroke="url(#pythonGrad)" stroke-width="1.5"/>
+  <circle cx="14" cy="12" r="2.5" fill="#ffd43b"/>
+  <path d="M 20 10 Q 26 10 26 15 L 26 20" fill="none" stroke="#3776ab" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="26" cy="26" r="2.5" fill="#3776ab"/>
+  <path d="M 20 28 Q 14 28 14 23 L 14 18" fill="none" stroke="#ffd43b" stroke-width="2" stroke-linecap="round"/>
+</svg>

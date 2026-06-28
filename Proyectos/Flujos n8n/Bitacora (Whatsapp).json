@@ -1,0 +1,1192 @@
+﻿{
+  "name": "Bitacora (Whatsapp)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "bot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3040,
+        368
+      ],
+      "id": "6dc87693-2319-4e77-a154-0cd896859493",
+      "name": "Recibir mensaje Whatsapp",
+      "webhookId": "REDACTED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "voice_message",
+        "binaryPropertyName": "data_voice",
+        "options": {
+          "mimeType": "audio/ogg"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1584,
+        464
+      ],
+      "id": "3276c28d-88a3-4abf-be4b-418ea0f2413e",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "data_voice",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1392,
+        464
+      ],
+      "id": "1912e277-a66f-408f-9b15-0ad14222e7de",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "457ea312-46d6-4348-9d08-e7e6298940ca",
+              "leftValue": "={{ $json.message_Type }}",
+              "rightValue": "conversation",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2016,
+        368
+      ],
+      "id": "7421b55d-7ae5-430a-bf7c-c31c7691fae9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c19656fd-8fbd-4c18-b075-d97dcee9a5f2",
+              "name": "id de chat",
+              "value": "={{ $json.body.data.key.remoteJid }}",
+              "type": "string"
+            },
+            {
+              "id": "3fc8e523-e5a5-48ac-805f-b5827e0d167b",
+              "name": "instancia",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "08155d9b-370a-44c1-ac68-9acdc9215e84",
+              "name": "apikey",
+              "value": "={{ $json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "ed9cf5df-0a4c-4d55-8583-b804bbbcea54",
+              "name": "url_servidor",
+              "value": "={{ $json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "f5f59f15-afed-4925-85a2-df64debf229b",
+              "name": "nombre_de_usuario",
+              "value": "={{ $json.body.data.pushName }}",
+              "type": "string"
+            },
+            {
+              "id": "d13b40b0-a380-40c8-93ec-dcc96c54e7e0",
+              "name": "voice_message",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            },
+            {
+              "id": "d30f420b-9024-4881-891c-218d1b9b3668",
+              "name": "text_message",
+              "value": "={{ $json.body.data.message.conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "8257700f-f999-4e52-bed6-3606e599e430",
+              "name": "message_Type",
+              "value": "={{ $json.body.data.messageType }}",
+              "type": "string"
+            },
+            {
+              "id": "fe6d6c00-1fce-4cc9-9cfa-3e44866d329b",
+              "name": "sessionid",
+              "value": "={{ $json.body.data.key.id }}",
+              "type": "string"
+            },
+            {
+              "id": "69e072b6-eb9e-4109-b485-6458d83387d0",
+              "name": "date_time",
+              "value": "={{ $json.body.data.messageTimestamp.toDateTime('s').toLocal() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2576,
+        368
+      ],
+      "id": "ba0a75a7-972f-466e-8495-47935887ac82",
+      "name": "Extraer datos del mensaje"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c9e209c4-1037-49c0-ac20-b80164d3bc5b",
+              "name": "nombre_de_usuario",
+              "value": "={{ $json.nombre_de_usuario }}",
+              "type": "string"
+            },
+            {
+              "id": "6350d085-45b7-45d4-9c01-efd9d30624e3",
+              "name": "Final_message",
+              "value": "={{ $json.text_message }}",
+              "type": "string"
+            },
+            {
+              "id": "f6c6be94-400e-4e11-ad1d-c0bb54987355",
+              "name": "sessionid",
+              "value": "={{ $('Extraer datos del mensaje').item.json.sessionid }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1408,
+        272
+      ],
+      "id": "7caccd13-989d-400e-8d91-c1637f629027",
+      "name": "Final_message_txt"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d67d4402-c82a-4c15-a6ab-ec209120a913",
+              "name": "Final_message",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "04eedbbd-e94a-41ff-99c1-94d215d6a705",
+              "name": "sessionid",
+              "value": "={{ $('Extraer datos del mensaje').item.json.sessionid }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1200,
+        464
+      ],
+      "id": "0a421543-c518-492c-bf40-269b496ad039",
+      "name": "Final_message_voice"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d8e8d25a-d84d-4b02-be09-e5ea43710d02",
+              "name": "Concat_message",
+              "value": "={{$json.message.map(m=>\n JSON.parse(m).message).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -224,
+        272
+      ],
+      "id": "b7b59423-f1f9-4334-a1ee-f008172e13d6",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        496
+      ],
+      "id": "941561e4-6651-4d43-a53a-bb84f64ad9c5",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa este documento cuando el usuario quiera asignar una tarea a un empleado",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Agrega tu tarea",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1899360171,
+          "mode": "list",
+          "cachedResultName": "Tareas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit#gid=1899360171"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Tarea": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tarea', ``, 'string') }}",
+            "Submission ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Submission_ID', ``, 'string') }}",
+            "Submission IP": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Submission_IP', ``, 'string') }}",
+            "Notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+            "Inicio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Inicio', ``, 'string') }}",
+            "Fecha finalizaciÃ³n": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_finalizaci_n', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}",
+            "DescripciÃ³n de la tarea": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n_de_la_tarea', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tarea",
+              "displayName": "Tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inicio",
+              "displayName": "Inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha finalizaciÃ³n",
+              "displayName": "Fecha finalizaciÃ³n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DescripciÃ³n de la tarea",
+              "displayName": "DescripciÃ³n de la tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submission IP",
+              "displayName": "Submission IP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submission ID",
+              "displayName": "Submission ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        256,
+        496
+      ],
+      "id": "0bfd7907-e4fa-47dc-9929-6f4a2594505b",
+      "name": "asignar_tarea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta cuando se te pida consultar una o varias tareas",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Agrega tu tarea",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1899360171,
+          "mode": "list",
+          "cachedResultName": "Tareas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit#gid=1899360171"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        496
+      ],
+      "id": "149a8be0-96bc-41db-a741-be21fcc347ef",
+      "name": "conultar_tarea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta cuando el usuario quiera modificar una tarea",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Agrega tu tarea",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1899360171,
+          "mode": "list",
+          "cachedResultName": "Tareas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit#gid=1899360171"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Tarea": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tarea', ``, 'string') }}",
+            "Inicio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Inicio', ``, 'string') }}",
+            "Fecha finalizaciÃ³n": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_finalizaci_n', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}",
+            "DescripciÃ³n de la tarea": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n_de_la_tarea', ``, 'string') }}",
+            "Notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', ``, 'string') }}",
+            "Submission IP": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Submission_IP', ``, 'string') }}",
+            "Submission ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Submission_ID', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Nombre"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tarea",
+              "displayName": "Tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inicio",
+              "displayName": "Inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha finalizaciÃ³n",
+              "displayName": "Fecha finalizaciÃ³n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DescripciÃ³n de la tarea",
+              "displayName": "DescripciÃ³n de la tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submission IP",
+              "displayName": "Submission IP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submission ID",
+              "displayName": "Submission ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        512,
+        496
+      ],
+      "id": "e5215af7-e2dc-4a85-b2f4-7a6d466a0f35",
+      "name": "actualizar_tarea",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        496
+      ],
+      "id": "f568141e-654a-475c-b116-f8d8f7001d53",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta cuando el usuario quiera actualizar el estado de una tarea",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Agrega tu tarea",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1899360171,
+          "mode": "list",
+          "cachedResultName": "Tareas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1utHQ7HbgrMn6HK7y0zg9HKexNrAWsoVE89tTsSXdXd0/edit#gid=1899360171"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Estado"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tarea",
+              "displayName": "Tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Inicio",
+              "displayName": "Inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha finalizaciÃ³n",
+              "displayName": "Fecha finalizaciÃ³n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "DescripciÃ³n de la tarea",
+              "displayName": "DescripciÃ³n de la tarea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Submission IP",
+              "displayName": "Submission IP",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Submission ID",
+              "displayName": "Submission ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        496
+      ],
+      "id": "f9319a66-dca0-4c4a-9832-7b03274ece6b",
+      "name": "cambiar_estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta para enviar el recordatorio por correo a un empleado ",
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', `Cuando tomes los datos de la herramienta \"obtener_datos\" coloca su correo aquÃ­`, 'string') }}",
+        "subject": "Recordatorio de vencimiento de tareas",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `Genera un menaje notificando a la persona sobre el estado de sus tareas mÃ¡s recientes a vencer`, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        768,
+        496
+      ],
+      "id": "4e06fab7-95a2-41dc-8c44-7c4ec088ea78",
+      "name": "enviar_correo",
+      "webhookId": "REDACTED_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.Concat_message }}",
+        "options": {
+          "systemMessage": "=Eres un asistente especializado en gestiÃ³n de tareas conectado a Google Sheets y a un sistema de notificaciones (WhatsApp / Evolution API).\nTu fecha actual es: {{ $now }}. Zona horaria: America/Mexico (UTC-6).\n\nTu funciÃ³n es interpretar los mensajes del usuario y decidir UNA sola acciÃ³n, relacionada Ãºnicamente con tareas.\n\nAntes de responder, SIEMPRE debes usar el nodo \"Pensamiento y razonamiento (Think)\" para analizar el mensaje.\n\nðŸ”µ ACCIONES PERMITIDAS\n\nDebes identificar una de estas acciones:\n\nasignar_tarea â†’ crear tarea\n\nconsultar_tarea â†’ consultar tareas de un empleado\n\ncambiar_estado â†’ modificar el estado de una tarea\n\nenviar_recordatorio â†’ enviar recordatorio por WhatsApp\n\nCuando el usuario pida enviar un recordatorio, DEBES llamar la herramienta:\nenviar_recordatorio(number, message)\n\nMust return:\n{\n  \"number\": \"...\",\n  \"message\": \"...\"\n}\n\nEjemplo:\n\nUsuario: Envia un recordatorio a Cristofer\nAgente â†’ llama a enviar_recordatorio con:\n{\n  \"number\": \"528124443946@s.whatsapp.net\",\n  \"message\": \"Recordatorio pendiente\"\n}\n\n\nenviar_correo â†’ solo si el usuario lo solicita explÃ­citamente\n\nreasignar_tareas â†’ cambiar quiÃ©n tiene la tarea\n\nSi el mensaje es ambiguo, pide aclaraciÃ³n.\n\nðŸ”µ DATOS QUE SIEMPRE DEBES EXTRAER\n\nnombre_empleado\n\ntitulo_tarea\n\nacciÃ³n\n\ndescripciÃ³n\n\nnuevo_estado\n\nfecha\n\npersona_a_notificar\n\nðŸ”µ REGLAS CRÃTICAS PARA EVITAR BUCLES E ITERACIONES (MUY IMPORTANTE)\n\nEstas reglas detienen por completo el problema de:\n\nAgent stopped due to max iterations.\n\nDebes cumplirlas SIEMPRE:\n\n1ï¸âƒ£ DespuÃ©s de ejecutar una herramienta, NUNCA interpretes su respuesta como un nuevo mensaje del usuario.\n\nNo debes pensar nuevamente.\n\n2ï¸âƒ£ NO debes llamar a Think otra vez tras usar una herramienta.\n\nThink solo se ejecuta una vez por mensaje del usuario.\n\n3ï¸âƒ£ Tras llamar a una herramienta, debes producir exactamente UN mensaje final dirigido al usuario.\n\nNo mÃ¡s llamadas. No mÃ¡s anÃ¡lisis.\n\n4ï¸âƒ£ Si Think detecta la acciÃ³n â€”\n\nâœ” llama a la herramienta\nâœ” espera la respuesta\nâœ” envÃ­a un solo mensaje final y DETENTE.\n\n5ï¸âƒ£ Si Think considera que el mensaje estÃ¡ incompleto â€”\n\nâœ” NO llames herramientas\nâœ” solo pide aclaraciÃ³n\nâœ” DETENTE.\n\nEsto elimina bucles y evita que el agente llegue al lÃ­mite de iteraciones.\n\nðŸ”µ EJEMPLOS DE INTERPRETACIÃ“N\nMensaje del usuario\tAcciÃ³n\n\"Â¿CÃ³mo va Cristofer con sus tareas?\"\tconsultar_tarea\n\"AsÃ­gnale una tarea de reportes a Ana\"\tasignar_tarea\n\"EnvÃ­ale un recordatorio a Luis\"\tenviar_recordatorio\n\"Cambia a completada la tarea 'Informe mensual' de Ana\"\tcambiar_estado\n\"Cambia la tarea de Ana para que ahora la tenga Cristofer\"\treasignar_tareas\n\"MÃ¡ndalo por correo\"\tenviar_correo\nðŸ”µ RESPUESTA FINAL QUE DEBE ENVIAR EL AGENTE\n\nSiempre:\n\nclara\n\ncorta\n\nestilo WhatsApp\n\nsolo UNA\n\nEjemplos:\n\nâ€œPerfecto ðŸ˜Š, ya consultÃ© las tareas.â€\n\nâ€œListo, ya asignÃ© la tarea correctamente.â€\n\nâ€œHe enviado el recordatorio ðŸ‘.â€\n\nâ€œEstado actualizado con Ã©xito.â€\n\nâ€œNecesito saber a quÃ© tarea te refieres para poder actualizarla.â€",
+          "maxIterations": "={{ 6 }}",
+          "returnIntermediateSteps": "",
+          "passthroughBinaryImages": true,
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        272
+      ],
+      "id": "d08ce276-2053-4b88-9a0e-fbbaee7226ca",
+      "name": "Asistente de seguimiento"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usa esta herramienta para OBTENER la informaciÃ³n del empleado",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Base de datos para pruebas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BWoEZQKjOb4dspELk-niBzuUua6SiMOE-z0WHj6Oio0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1BWoEZQKjOb4dspELk-niBzuUua6SiMOE-z0WHj6Oio0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        496
+      ],
+      "id": "003fd426-699a-44ef-9324-68531f449f28",
+      "name": "obtener_datos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Use this tool to think step-by-step before taking any action.\nBreak down the userâ€™s message and determine exactly what needs to be done.\nNever generate the final response here â€” only structured reasoning.\n\nðŸ”´ IMPORTANT RULE\n\nOnly analyze messages that clearly come from the USER.\n\nIf the message is:\n\nan assistant response\n\na system message\n\nor any message generated by the bot itself\n\nâž¡ï¸ Output exactly:\n\naction: none\nreason: ignore-bot-message\n\nðŸ”´ LOOP PROTECTION\n\nNever ask for missing information more than once.\nIf clarification was already requested previously, WAIT silently until the user responds.\n\nðŸ”µ WHEN THINKING, ALWAYS IDENTIFY:\n1ï¸âƒ£ Intended action\n\nOne of these:\n\nassign_task\n\ncheck_task\n\nchange_status\n\nsend_reminder\n\nreassign_task\n\nnone / unclear\n\n2ï¸âƒ£ Extracted data found in the message:\n\nemployee_name\n\ntask_title\n\ndescription\n\nnew_status\n\ndate_or_time\n\nnotify_person\n\ndelivery_method (email or WhatsApp), only if explicitly mentioned\n\n3ï¸âƒ£ Missing information\n\nList what is missing to complete the action (if anything).\n\n4ï¸âƒ£ Decision\n\nIf the message is clear â†’ decide which tool should be executed next, and why.\nIf the message is unclear â†’ decide that the agent should ask the user for clarification.\n\nðŸ“Œ OUTPUT FORMAT (ALWAYS SHORT, ALWAYS STRUCTURED)\n\nThe tool must output reasoning like:\n\nThe detected action\n\nExtracted fields\n\nWhether additional clarification is required\n\nWhich tool should run next, and why\n\nâš  Do not write the final user message here.\nâš  Do not execute tools here.\nâš  Only analyze and decide.\n\nIf the user says things like:\n\"which employees have tasks assigned\",\n\"show me the employees with tasks\",\n\"who has pending tasks\",\n\"employees with assignments\",\nthis counts as: intended_action = check_task\nand employee_name = none.\nSet query_type = \"list_employees_with_tasks"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1024,
+        496
+      ],
+      "id": "c3c102ea-5de1-409a-ace4-779927a7b5ef",
+      "name": "Pensamiento y razonamiento"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Usa esta herramienta para enviar un recordatorio por WhatsApp a un empleado.\nParÃ¡metros:\n- number: nÃºmero del destinatario en formato 52XXXXXXXXXX@s.whatsapp.net\n- message: texto del recordatorio.\n",
+        "method": "POST",
+        "url": "={{ $('Extraer datos del mensaje').item.json.url_servidor }}/message/sendText/{{ $('Extraer datos del mensaje').item.json.instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{ $('Extraer datos del mensaje').item.json.apikey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `$('Agente de IA').item.json.numero_para_recordatorio || ''`, 'string') }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters1_Value', `$('Agente de IA').item.json.mensaje_recordatorio || 'Recordatorio pendiente'`, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        1152,
+        496
+      ],
+      "id": "c272cdf7-8dcd-4bed-828c-c13666b7b7f4",
+      "name": "enviar_recordatorio"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1360,
+        272
+      ],
+      "id": "302cdf1d-3b91-49bd-9423-0cc75e3aa50c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -912,
+        352
+      ],
+      "id": "b2c25453-a83e-4ec1-a0a8-a381d242b7b0",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {
+    "Recibir mensaje Whatsapp": [
+      {
+        "json": {
+          "name": "Juan",
+          "code": 1
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Recibir mensaje Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "Extraer datos del mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Final_message_voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Final_message_txt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer datos del mensaje": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final_message_txt": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final_message_voice": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "asignar_tarea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conultar_tarea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "actualizar_tarea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cambiar_estado": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviar_correo": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asistente de seguimiento": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_datos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pensamiento y razonamiento": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviar_recordatorio": {
+      "ai_tool": [
+        [
+          {
+            "node": "Asistente de seguimiento",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timezone": "America/Mexico_City",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "91b86620-2611-416a-929c-9ce7251b7735",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "11b2444ebdf37e1adba22617df3ef520a982fbdb367b9495bda4df5a719f04b6"
+  },
+  "id": "REDACTED_CREDENTIAL_ID",
+  "tags": []
+}

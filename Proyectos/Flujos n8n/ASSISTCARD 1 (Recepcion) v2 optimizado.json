@@ -1,0 +1,1377 @@
+﻿{
+  "name": "ASSISTCARD 1 (Recepcion) v2",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Al iniciar el flujo recolectara todos los clientes del formulario y despues el verificador 1 revisara el estado de cada uno y si el resultado es true significa que ese cliente ya ha sido cotizado y el verificador simplemente lo ignorara y no hara nada, pero si en cambio el resultado del verificador es false este tomara solo los datos de los clientes con ese resultado y los enviara al siguiente nodo para generar las cotizaciÃ³nes de todos al mismo tiempo y enviarlas",
+        "height": 704,
+        "width": 832,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2480,
+        80
+      ],
+      "id": "041c20f3-8263-494f-88c5-37bb950ab702",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "En esta parte se generan las cotizaciones de todos los clientes al mismo tiempo.\n\n(EL RIESGO DE ERROR ES BAJO MIENTRAS NO SE SATURAN LAS SOLICITUDES)",
+        "height": 720,
+        "width": 1056
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1664,
+        48
+      ],
+      "id": "72330316-f6ac-4013-8419-5cba2a908ebd",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "LA SECCION FINAL Y LA MAS CRITICA DEL FLUJO YA QUE SI ALGO FALLA EN ESTE PUNTO SERA MUY DIFICIL DETENER EL ENVIO DE CORREOS MASIVOS SI EL PASO 9 LLEGA A FALLAR;\n\nSi todo continua normalmente en la seccion anterior y no hay ningun error el nodo \"RESOLVER CONFLICTOS\" deberia procesar las variables \"Imagen (para correo)\" y \"pdf_url\" lo que normalmente no se necesitaria y no causaria conflictos, (Si la imagen continuara en formato Binario), pero al haber sido convertida a JSON y contar como variable esta genera un conflicto en el Paso 8 que solo descarga documentos y en el Paso 9 ya que el nodo de Gmail no sabe que esa variable es para el body HTML.\n\nTras esto el Paso 8 descargara todas las cotizaciones en formato Binario y el Paso 9 teniendo ya configuradas las variables de Correo, el campo Body con el texto y la imagen simplemente tomara la variable de la imagen en formato JSON y el nombre del cliente asi como tambien adjuntara la respectiva cotizacion (ESPECIFICA) y la imagen de worldwide Protect para enviar los correos uno por uno hasta termianr la lista y finalmente el Paso 10 actualizara el estado del cliente a TRUE marcandolo como cotizado y terminando el flujo.\n\n(EL RIESGO  EN ESTE PUNTO ES CRITICO SI NO SE REALIZAN PRUEBAS Y SE ASEGURA QUE TODO FUNCIONE COMO DEBE)\n\n\n\n",
+        "height": 1296,
+        "width": 2224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        -128
+      ],
+      "id": "c3b8e312-a904-406d-b586-052e4b03997e",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "Worldwide protect.jpeg",
+          "cachedResultUrl": "https://drive.google.com/file/d/1YduHuQxkKq4GV048095PaBI4XRdUoU4l/view?usp=drivesdk"
+        },
+        "options": {
+          "binaryPropertyName": "Imagen1",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "application/pdf"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1392,
+        80
+      ],
+      "id": "55b27660-1c53-47a1-add4-e731ba7c2bde",
+      "name": "6.- Descargar imagen para correo1",
+      "executeOnce": false,
+      "retryOnFail": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "100 Seg"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "binaryPropertyName": "Imagen1",
+        "destinationKey": "World",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        80
+      ],
+      "id": "d9902a2d-6979-4e26-a876-56b2bb62fd32",
+      "name": "7.-Convertir imagen de Base64 a JSON2"
+    },
+    {
+      "parameters": {
+        "fromEmail": "=\"RYE Insurance\" <info@ryeinsurance.com>",
+        "toEmail": "={{ $('Ordenar').item.json.Email }}",
+        "subject": "RYE INSURANCE INFORMATION",
+        "html": "=<div style=\"font-family: Arial, Helvetica, sans-serif; font-size:14px; color:#222; line-height:1.6;\">\n<p>Dear {{ $('Ordenar').item.json['First name'] }} ,</p>\n<p>\nPlease find attached your price quotation and the Terms and Conditions. If everything is correct and you have no changes to make, kindly confirm the information by responding to the email authorizing the generation of the payment link to complete your purchase and proceed with the policy issuance. Please note, once the link is generated, it will be valid for 3 days.\n</p>\n<p>\nShould you have any questions or require further assistance, please do not hesitate to contact me directly. You can reach me via WhatsApp at \n<a href=\"https://wa.me/528132557200\" style=\"color:#1a73e8;\">https://wa.me/528132557200</a>\n</p>\n<p>\nOur business hours are Monday to Friday, from 9:00 am to 6:00 pm (Mexico time), and we are closed on Saturdays and Sundays.\n</p>\n<br>\n\n<a href=\"mailto:info@ryeinsurance.com?subject=Quote%20Confirmation&body=Confirm%20Quote%20ID: {{ $('Ordenar').item.json['Passport number'] }}\n, and Dates: {{ $('Ordenar').item.json['Start date'] }}, {{ $('Ordenar').item.json['End date'] }}\n\" \nstyle=\"background-color:#e53935;color:#ffffff;padding:12px 20px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold;\">\nConfirm your quote here\n</a>\n\n<p>Best Regards</p>\n<p>Carolina Mendoza</p>\n<!-- FIRMA -->\n<div style=\"margin-top:15px;\">\n  <img src=\"data:image/png;base64,{{ $json.World }}\" \n       width=\"500\" \n       height=\"150\"\n       style=\"display:block; max-width:100%;\">\n</div>",
+        "options": {
+          "appendAttribution": false,
+          "attachments": "data, data1"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2960,
+        80
+      ],
+      "id": "95c46d0e-3d05-4de3-850f-3022c9fef9ef",
+      "name": "9.- Enviar Correo1",
+      "webhookId": "REDACTED_WEBHOOK_ID",
+      "credentials": {
+        "smtp": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "Copia_de_Cotizacion",
+        "name": "=Cotizacion_ {{ $('Ordenar').item.json['Passport number'] }},{{ $('Ordenar').item.json['First name'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "=https://drive.google.com/drive/u/0/folders/1Km45ICHE7F0oE6gp0v12oiEZWArf09tY",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3632,
+        80
+      ],
+      "id": "b90da18b-2f99-4be1-bca5-36a130a0df62",
+      "name": "Subir Cotizacion a 100 Seg1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "100 Seg"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Merge').item.json.pdf_url }}",
+          "mode": "url"
+        },
+        "options": {
+          "binaryPropertyName": "=Copia_de_Cotizacion"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3408,
+        80
+      ],
+      "id": "f17495ad-9b05-4a6e-bd9d-509b94aacb65",
+      "name": "Descargar Cotizaciones",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Resolver conflictos').item.json.pdf_url }}",
+          "mode": "url"
+        },
+        "options": {
+          "binaryPropertyName": "=data1"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2288,
+        80
+      ],
+      "id": "b7134913-e5eb-4628-aa69-d79f81bfd9b1",
+      "name": "8.- Descargar Cotizaciones1",
+      "executeOnce": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "General Conditions AC Mexico .pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1dOBtVYNNk1uR40WUd885BhZF7ihtwDSZ/view?usp=drivesdk"
+        },
+        "options": {
+          "binaryPropertyName": "=data"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2064,
+        80
+      ],
+      "id": "e0a8bcc8-069c-4265-b126-5fe0c6a340ca",
+      "name": "Descargar Condiciones Generales",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2512,
+        80
+      ],
+      "id": "0a49032b-535b-4552-bb71-c5b97fa4708f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b99c4a2-0f9b-49a6-b256-e3cea46c9601",
+              "name": "World",
+              "value": "={{ $json.World }}",
+              "type": "string"
+            },
+            {
+              "id": "0a232bf1-0516-41a3-abea-43a74f339b9f",
+              "name": "pdf_url",
+              "value": "={{ $('Generar Cotizacion').item.json.pdf_url }}",
+              "type": "string"
+            },
+            {
+              "id": "2f117292-2151-46e2-9491-61aeb0673c0b",
+              "name": "ok",
+              "value": "={{ $('Generar Cotizacion').item.json.ok }}",
+              "type": "boolean"
+            },
+            {
+              "id": "c8f23456-58ab-4e5d-8ec4-8f364681e1ec",
+              "name": "GC_ID",
+              "value": "Generales",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1840,
+        80
+      ],
+      "id": "1b0207c9-27be-41a0-9a75-c611dd5a52bb",
+      "name": "Resolver conflictos"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e150c40d-4600-40c9-bb85-c3172cacf7c4",
+              "leftValue": "={{ $json.pdf_url }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals",
+                "name": "filter.operator.notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2736,
+        80
+      ],
+      "id": "8a2e0411-f572-443f-bec7-64972bb1c70b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fdee1225-6be9-4b0e-8a24-1368d470cb00",
+                    "leftValue": "={{ $json.ok }}",
+                    "rightValue": "done",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SUCCESS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9ab58864-f821-4089-be55-d4604d9f7778",
+                    "leftValue": "={{ $json.ok }}",
+                    "rightValue": "pending",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PENDING"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1040,
+        256
+      ],
+      "id": "e4933e6c-66e6-4c1d-aa83-8f6635773391",
+      "name": "5.- Verificar estado de Cotizacion",
+      "executeOnce": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "775b82b2-0fba-48d9-b232-e706d3332017",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Por cotizar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Por cotizar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "77d3f5c8-d2d3-4f68-a44e-9561ab76f586",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Cotizado",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ya cotizado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d6e74730-5850-46dd-ad08-e44c8d6d6586",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "=Link de pago",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Confirmado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b59c277e-0d54-4838-b815-494c9a2de685",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Pendiente de contacto",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pendiente de contacto"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1296,
+        352
+      ],
+      "id": "eaf08744-311a-4060-8ad0-3156f93fe402",
+      "name": "Verificar estado del cliente (Por cotizar, Cotizado, Finish)"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1584,
+        208
+      ],
+      "id": "edf7624e-5a69-4d82-bb4a-6ab689a83079",
+      "name": "Ordenar"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1584,
+        640
+      ],
+      "id": "72e6a3a0-338d-456c-ac29-79e14ed80031",
+      "name": "No hacer nada"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "2026-2027 Rotary Insurance",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lKeyYtoeXfL-s6h-JQ6c5BVnPqBpdQWnWL5QdPrvhT8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9590690,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lKeyYtoeXfL-s6h-JQ6c5BVnPqBpdQWnWL5QdPrvhT8/edit#gid=9590690"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Estado": "Cotizado",
+            "Passport number": "={{ $('Ordenar').item.json['Passport number'] }}"
+          },
+          "matchingColumns": [
+            "Passport number"
+          ],
+          "schema": [
+            {
+              "id": "Marca temporal",
+              "displayName": "Marca temporal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Host District",
+              "displayName": "Host District",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Passport number",
+              "displayName": "Passport number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First name",
+              "displayName": "First name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Middle name ",
+              "displayName": "Middle name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last name",
+              "displayName": "Last name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date of birth",
+              "displayName": "Date of birth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Home contry",
+              "displayName": "Home contry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Start date",
+              "displayName": "Start date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "End date",
+              "displayName": "End date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Your payment will be with:",
+              "displayName": "Your payment will be with:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Additional considerations",
+              "displayName": "Additional considerations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Dias",
+              "displayName": "Dias",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Tipo de cambio",
+              "displayName": "Tipo de cambio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Precio USD",
+              "displayName": "Precio USD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Total (MXN)",
+              "displayName": "Total (MXN)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Edad ",
+              "displayName": "Edad ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3184,
+        80
+      ],
+      "id": "0bcd9e6e-2877-456b-80eb-9fcefe832259",
+      "name": "10.-Actualizar estado a Cotizado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "100 Seg (G Sheets)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://script.google.com/macros/s/REDACTED_SCRIPT_URL",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"nombre\":\"{{ $json['First name'] }}\",\n\"dias\":\"{{ $json.Dias }}\",\n\"D\":\"{{ $json.Dias }}\",\n\"F1\":\"{{ $json['Start date'] }}\",\n\"F2\":\"{{ $json['End date'] }}\",\n\"E1\":\"{{ $json['Edad '] }}\",\n\"C1\":\"{{ $json['Tipo de cambio'] }}\",\n\"U1\":\"{{ $json['Precio USD'] }}\",\n\"U2\":\"2.9\",\n\"T\":\"{{ $json['Total (MXN)'] }}\",\n\"T1\":\"{{ $json['Total (MXN)'] }}\",  \n\"F4\":\"{{$now.format('dd-MM-yyyy')}}\",\n\"MT\":\"{{ $json['Marca temporal'] }}\",\n\"email\":\"{{ $json.Email }}\"\n}\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1312,
+        176
+      ],
+      "id": "5ba310c9-9c53-49de-8a73-2a1ac74c47a6",
+      "name": "Generar Cotizacion",
+      "executeOnce": false,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@ryeinsurance.com",
+        "toEmail": "info@ryeinsurance.com",
+        "subject": "=ðŸŸ¢ CotizaciÃ³n Enviada â€” {{ $('Ordenar').item.json['First name'] }} {{ $('Ordenar').item.json['Middle name '] }}  {{ $('Ordenar').item.json['Last name'] }}  dÃ­as) {{ $('Ordenar').item.json.Dias }}",
+        "emailFormat": "text",
+        "text": "=\nSe procesÃ³ automÃ¡ticamente una cotizaciÃ³n de estancia prolongada.\n\n\nDatos del cliente:\n- Nombre: {{ $('Agrupar').item.json['First name'] }}\n- Correo: {{ $('Agrupar').item.json['Email'] }}\n- DÃ­as solicitados: {{ $('Agrupar').item.json['Dias'] }}\n- Fecha inicio: {{ $('Agrupar').item.json['Start date'] }}\n- Fecha fin: {{ $('Agrupar').item.json['End date'] }}\n- Distrito: {{ $('Agrupar').item.json['Host District'] }}\nLa cotizaciÃ³n fue enviada al cliente y el estado estÃ¡ actualizado en el sistema.\n\nSe recomienda dar seguimiento dado el valor de la pÃ³liza.\n\nEste mensaje fue generado automÃ¡ticamente.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3856,
+        80
+      ],
+      "id": "3da9c275-fcf3-40c5-a837-d39381929906",
+      "name": "Enviar correo interno2",
+      "webhookId": "REDACTED_WEBHOOK_ID",
+      "credentials": {
+        "smtp": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -784,
+        432
+      ],
+      "id": "4ed2f1c7-39bb-46b1-a52a-c3989b067c41",
+      "name": "Wait",
+      "webhookId": "REDACTED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "url": "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/oportuno?token=e86740465f79a429e252051599fc86d3e51655abbb1c18a2d0ac50108b5c80f4 ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -2064,
+        160
+      ],
+      "id": "475fb930-4d70-4019-8fd2-306546494148",
+      "name": "3.-Obtener tipo de cambio Banxico",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n  const dias = Number(data.dias);\n\n  let estado = \"\";\n  let tipo_precio = \"\";\n  let dias_validos = false;\n\n  if (dias < 60) {\n    estado = \"invalido_minimo\";\n  } else if (dias > 365) {\n    estado = \"invalido_maximo\";\n  } else {\n    dias_validos = true;\n\n    if (dias < 180) {\n      estado = \"precio_corto\";\n      tipo_precio = \"corto\";\n    } else {\n      estado = \"precio_normal\";\n      tipo_precio = \"normal\";\n    }\n  }\n\n  return {\n    json: {\n      ...data,\n      estado,\n      tipo_precio,\n      dias_validos\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2240,
+        160
+      ],
+      "id": "4c6813c2-da6d-40d7-a21f-d59399973f4b",
+      "name": "2.-Validar dias"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Form",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2432,
+        160
+      ],
+      "id": "c3b4dbe3-d85f-41fe-b691-971f64b43bcd",
+      "name": "1.-Recibir datos del Formulario",
+      "webhookId": "REDACTED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "jsCode": "  return items.map(item => {\n    try {\n      const startStr = item.json['Start date'];\n      const endStr = item.json['End date'];\n\n      if (!startStr || !endStr) {\n        return {\n          json: {\n            ...item.json,\n            'Dias': null,\n            'dias_error': 'Missing dates'\n          }\n        };\n      }\n\n      const start = new Date(startStr);\n      const end = new Date(endStr);\n\n      if (isNaN(start.getTime()) || isNaN(end.getTime())) {\n        return {\n          json: {\n            ...item.json,\n            'Dias': null,\n            'dias_error': 'Invalid date format'\n          }\n        };\n      }\n\n      const diffTime = Math.abs(end - start);\n      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));\n      const dias = diffDays + 1; // +1 para inclusivo\n\n      return {\n        json: {\n          ...item.json,\n          'Dias': dias\n        }\n      };\n    } catch (error) {\n      return {\n        json: {\n          ...item.json,\n          'Dias': null,\n          'dias_error': error.message\n        }\n      };\n    }\n  });\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2416,
+        384
+      ],
+      "id": "6194eaad-7603-4707-8329-affb85196b96",
+      "name": "3.4.-Calcular Dias"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n  return items.map(item => {\n    try {\n      const dobString = item.json['Date of birth'];\n      if (!dobString) {\n        return {\n          json: {\n            ...item.json,\n            'Edad ': null,\n            'edad_error': 'No date of birth provided'\n          }\n        };\n      }\n\n      const dob = new Date(dobString);\n      const hoy = new Date();\n\n      if (isNaN(dob.getTime())) {\n        return {\n          json: {\n            ...item.json,\n            'Edad ': null,\n            'edad_error': 'Invalid date format'\n          }\n        };\n      }\n\n      let edad = hoy.getFullYear() - dob.getFullYear();\n      const m = hoy.getMonth() - dob.getMonth();\n\n      if (m < 0 || (m === 0 && hoy.getDate() < dob.getDate())) {\n        edad--;\n      }\n\n      return {\n        json: {\n          ...item.json,\n          'Edad ': edad\n        }\n      };\n    } catch (error) {\n      return {\n        json: {\n          ...item.json,\n          'Edad ': null,\n          'edad_error': error.message\n        }\n      };\n    }\n  });\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1856,
+        160
+      ],
+      "id": "d0e05dbd-99fe-4b01-8fcc-95823de8cf91",
+      "name": "3.3.-Calcular Edad"
+    },
+    {
+      "parameters": {
+        "jsCode": "  const TARIFA_USD_POR_DIA = 2.9;\n\n  return items.map(item => {\n    try {\n      const dias = item.json.Dias;\n      let tipoCambio = item.json['Tipo de cambio'];\n\n      // Si no viene tipo de cambio, intentar extraer de la respuesta de Banxico\n      if (!tipoCambio && item.json.data && item.json.data.bmx) {\n        const datoRaw = item.json.data.bmx.series[0].datos[0].dato;\n        tipoCambio = parseFloat(String(datoRaw).replace(',', '.'));\n      }\n\n      // Fallback si no hay tipo de cambio\n      if (!tipoCambio) {\n        tipoCambio = 17.50; // Valor por defecto\n      }\n\n      let precioUSD = null;\n      let totalMXN = null;\n\n      if (dias && tipoCambio) {\n        precioUSD = Math.round(TARIFA_USD_POR_DIA * dias * 100) / 100;\n        totalMXN = Math.round(precioUSD * tipoCambio * 100) / 100;\n      }\n\n      return {\n        json: {\n          ...item.json,\n          'Precio USD': precioUSD,\n          'Total (MXN)': totalMXN,\n          'Tipo de cambio': tipoCambio\n        }\n      };\n    } catch (error) {\n      return {\n        json: {\n          ...item.json,\n          'Precio USD': null,\n          'Total (MXN)': null,\n          'precio_error': error.message\n        }\n      };\n    }\n  });"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2224,
+        384
+      ],
+      "id": "1d90a69f-4e6a-42dc-8dee-033def09993b",
+      "name": "3.5.-Calcular Precio + Total"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cff3e722-fa74-4b83-846f-b1794a5538e2",
+              "name": "email",
+              "value": "={{$json.Email}}",
+              "type": "string"
+            },
+            {
+              "id": "20524766-de00-4a98-8ab7-ba810acd8f0e",
+              "name": "nombre",
+              "value": "={{ $json['First name'] }} ",
+              "type": "string"
+            },
+            {
+              "id": "17740ff0-e7fc-416b-8994-75d2ad58164d",
+              "name": "passport",
+              "value": "= {{ $json['Passport number'] }} ",
+              "type": "string"
+            },
+            {
+              "id": "78e81d64-3636-4e4e-8efd-46962046a7b2",
+              "name": "fecha_inicio",
+              "value": "= {{ $json['Start date'] }}  ",
+              "type": "string"
+            },
+            {
+              "id": "d8addf0d-2b64-4201-b568-783f7f71a8b1",
+              "name": "fecha_fin",
+              "value": "= {{ $json['End date'] }}  ",
+              "type": "string"
+            },
+            {
+              "id": "12a864e8-9a57-4445-a970-0112e04a125e",
+              "name": "edad",
+              "value": "={{ $json['Edad '] }}",
+              "type": "string"
+            },
+            {
+              "id": "52171520-d4d6-4dbc-b5fb-2616d8f5a811",
+              "name": "dias",
+              "value": "= {{ $json['Dias'] }}  ",
+              "type": "string"
+            },
+            {
+              "id": "90278f43-cf7c-41c3-89d4-0193b11bb224",
+              "name": "tipo_cambio",
+              "value": "= {{ $json['Tipo de cambio'] }}  ",
+              "type": "string"
+            },
+            {
+              "id": "1ad4601a-6818-4a34-8c55-b18d957beb2f",
+              "name": "precio_usd",
+              "value": "= {{ $json['Precio USD'] }} ",
+              "type": "string"
+            },
+            {
+              "id": "d7785891-2320-4f48-8b83-05ea2a28b25d",
+              "name": "total_mxn",
+              "value": "= {{ $json['Total (MXN)'] }} ",
+              "type": "string"
+            },
+            {
+              "id": "c81a805b-d11b-4255-9cbd-65e2b84ca5bd",
+              "name": "host_district",
+              "value": "= {{ $json['Host District'] }} ",
+              "type": "string"
+            },
+            {
+              "id": "79d6784f-f5bf-42ae-b39d-307fcd48bb86",
+              "name": "tiemestamp",
+              "value": "={{ $json['Marca temporal'] }}  ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2016,
+        384
+      ],
+      "id": "cfd7b567-4333-41db-ab50-25372671f4c1",
+      "name": "3.6-Consolidar Datos"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list",
+          "cachedResultName": "2026-2027 Rotary Insurance",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lKeyYtoeXfL-s6h-JQ6c5BVnPqBpdQWnWL5QdPrvhT8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 9590690,
+          "mode": "list",
+          "cachedResultName": "Cotizaciones 2026-2027",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lKeyYtoeXfL-s6h-JQ6c5BVnPqBpdQWnWL5QdPrvhT8/edit#gid=9590690"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $('2.-Validar dias').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1584,
+        384
+      ],
+      "id": "1f0de26c-c61a-4e89-97de-902ec7247613",
+      "name": "Buscar cliente1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "100 Seg (G Sheets)"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "6.- Descargar imagen para correo1": {
+      "main": [
+        [
+          {
+            "node": "7.-Convertir imagen de Base64 a JSON2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7.-Convertir imagen de Base64 a JSON2": {
+      "main": [
+        [
+          {
+            "node": "Resolver conflictos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9.- Enviar Correo1": {
+      "main": [
+        [
+          {
+            "node": "10.-Actualizar estado a Cotizado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Cotizaciones": {
+      "main": [
+        [
+          {
+            "node": "Subir Cotizacion a 100 Seg1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8.- Descargar Cotizaciones1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Condiciones Generales": {
+      "main": [
+        [
+          {
+            "node": "8.- Descargar Cotizaciones1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resolver conflictos": {
+      "main": [
+        [
+          {
+            "node": "Descargar Condiciones Generales",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "9.- Enviar Correo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5.- Verificar estado de Cotizacion": {
+      "main": [
+        [
+          {
+            "node": "6.- Descargar imagen para correo1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar estado del cliente (Por cotizar, Cotizado, Finish)": {
+      "main": [
+        [
+          {
+            "node": "Ordenar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No hacer nada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No hacer nada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No hacer nada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ordenar": {
+      "main": [
+        [
+          {
+            "node": "Generar Cotizacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10.-Actualizar estado a Cotizado": {
+      "main": [
+        [
+          {
+            "node": "Descargar Cotizaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Cotizacion": {
+      "main": [
+        [
+          {
+            "node": "5.- Verificar estado de Cotizacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Subir Cotizacion a 100 Seg1": {
+      "main": [
+        [
+          {
+            "node": "Enviar correo interno2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Generar Cotizacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2.-Validar dias": {
+      "main": [
+        [
+          {
+            "node": "3.-Obtener tipo de cambio Banxico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1.-Recibir datos del Formulario": {
+      "main": [
+        []
+      ]
+    },
+    "3.-Obtener tipo de cambio Banxico": {
+      "main": [
+        [
+          {
+            "node": "3.3.-Calcular Edad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3.3.-Calcular Edad": {
+      "main": [
+        [
+          {
+            "node": "3.4.-Calcular Dias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3.4.-Calcular Dias": {
+      "main": [
+        [
+          {
+            "node": "3.5.-Calcular Precio + Total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3.5.-Calcular Precio + Total": {
+      "main": [
+        [
+          {
+            "node": "3.6-Consolidar Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar cliente1": {
+      "main": [
+        []
+      ]
+    },
+    "3.6-Consolidar Datos": {
+      "main": [
+        [
+          {
+            "node": "Buscar cliente1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3bfa8f7e-2fec-4453-bf7d-2ac119ac3233",
+  "meta": {
+    "instanceId": "11b2444ebdf37e1adba22617df3ef520a982fbdb367b9495bda4df5a719f04b6"
+  },
+  "id": "olVtNoNCRyI4KQfJ",
+  "tags": []
+}
+

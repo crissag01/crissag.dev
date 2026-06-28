@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Finanzas Personales</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --surface2: #f1efe8;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1a1a18;
+    --text2: #5f5e5a;
+    --text3: #888780;
+    --accent: #534ab7;
+    --accent-bg: #eeedfe;
+    --accent-text: #3c3489;
+    --green: #0f6e56;
+    --green-bg: #e1f5ee;
+    --red: #a32d2d;
+    --red-bg: #fcebeb;
+    --amber: #854f0b;
+    --amber-bg: #faeeda;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; }
+  button { cursor: pointer; font-family: inherit; font-size: 14px; border: 0.5px solid var(--border2); background: var(--surface); color: var(--text); padding: 6px 14px; border-radius: var(--radius-sm); transition: background 0.15s; }
+  button:hover { background: var(--surface2); }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  button.primary:hover { background: #3c3489; }
+  button.danger { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+  input, select, textarea { font-family: inherit; font-size: 14px; padding: 7px 10px; border: 0.5px solid var(--border2); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 4px; }
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 500; }
+  .badge.ingreso { background: var(--green-bg); color: var(--green); }
+  .badge.gasto { background: var(--red-bg); color: var(--red); }
+  .badge.pago_tdc { background: var(--accent-bg); color: var(--accent-text); }
+  .badge.alerta { background: var(--amber-bg); color: var(--amber); }
+  .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px 16px; }
+  .metric .label { font-size: 12px; color: var(--text3); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric .value { font-size: 22px; font-weight: 500; }
+  .nav { display: flex; gap: 4px; padding: 1rem 1.5rem 0; }
+  .nav-btn { border: none; background: none; padding: 8px 16px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; color: var(--text2); font-weight: 500; font-size: 14px; border-bottom: 2px solid transparent; }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem; }
+  .modal { background: var(--surface); border-radius: var(--radius); padding: 1.5rem; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal h2 { font-size: 17px; font-weight: 500; margin-bottom: 1.25rem; }
+  .field { margin-bottom: 1rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .progress-bar { height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 11px; border: 0.5px solid; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 12px; font-weight: 500; color: var(--text3); padding: 6px 10px; border-bottom: 0.5px solid var(--border); }
+  td { padding: 10px 10px; border-bottom: 0.5px solid var(--border); font-size: 14px; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .empty { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
+  .color-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .section-header h3 { font-size: 15px; font-weight: 500; }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .chip { padding: 4px 12px; border-radius: 99px; font-size: 13px; border: 0.5px solid var(--border2); cursor: pointer; background: var(--surface); color: var(--text2); }
+  .chip.active { background: var(--accent-bg); color: var(--accent-text); border-color: var(--accent); }
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--text); color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 14px; z-index: 200; animation: slideup 0.2s ease; }
+  @keyframes slideup { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const API = "http://localhost:8000";
+const { useState, useEffect, useCallback } = React;
+
+const fmt = (n) => new Intl.NumberFormat('es-MX', { style:'currency', currency:'MXN' }).format(n ?? 0);
+const fmtDate = (s) => s ? new Date(s + 'T00:00:00').toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' }) : '—';
+const today = () => new Date().toISOString().split('T')[0];
+const mesActual = new Date().getMonth() + 1;
+const anioActual = new Date().getFullYear();
+
+const CATEGORIAS = ['Alimentación','Transporte','Entretenimiento','Salud','Ropa','Educación','Servicios','Hogar','Tecnología','Otro'];
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const COLORES_TDC = ['#6366f1','#0f6e56','#d85a30','#185fa5','#993556','#ba7517','#a32d2d'];
+
+function Toast({ msg }) {
+  return msg ? <div className="toast">{msg}</div> : null;
+}
+
+function ModalTarjeta({ tarjeta, onClose, onSave }) {
+  const [form, setForm] = useState(tarjeta || { nombre:'', banco:'', limite_credito:0, dia_corte:'', dia_limite_pago:'', color:'#6366f1' });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const save = async () => {
+    const url = tarjeta ? `${API}/tarjetas/${tarjeta.id}` : `${API}/tarjetas`;
+    const method = tarjeta ? 'PUT' : 'POST';
+    await fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...form, limite_credito: parseFloat(form.limite_credito)||0, dia_corte: form.dia_corte ? parseInt(form.dia_corte) : null, dia_limite_pago: form.dia_limite_pago ? parseInt(form.dia_limite_pago) : null }) });
+    onSave();
+  };
+  return (
+    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <h2>{tarjeta ? 'Editar tarjeta' : 'Nueva tarjeta de crédito'}</h2>
+        <div className="field"><label>Nombre / alias</label><input value={form.nombre} onChange={e=>set('nombre',e.target.value)} placeholder="ej. HSBC Platinum" /></div>
+        <div className="field"><label>Banco</label><input value={form.banco||''} onChange={e=>set('banco',e.target.value)} placeholder="ej. HSBC" /></div>
+        <div className="field"><label>Límite de crédito</label><input type="number" value={form.limite_credito} onChange={e=>set('limite_credito',e.target.value)} /></div>
+        <div className="grid2">
+          <div className="field"><label>Día de corte</label><input type="number" min="1" max="31" value={form.dia_corte||''} onChange={e=>set('dia_corte',e.target.value)} placeholder="ej. 15" /></div>
+          <div className="field"><label>Día límite de pago</label><input type="number" min="1" max="31" value={form.dia_limite_pago||''} onChange={e=>set('dia_limite_pago',e.target.value)} placeholder="ej. 25" /></div>
+        </div>
+        <div className="field">
+          <label>Color</label>
+          <div style={{display:'flex', gap:8, flexWrap:'wrap', marginTop:4}}>
+            {COLORES_TDC.map(c => <div key={c} onClick={()=>set('color',c)} style={{width:28, height:28, borderRadius:'50%', background:c, cursor:'pointer', border: form.color===c ? '3px solid var(--text)' : '2px solid transparent'}} />)}
+          </div>
+        </div>
+        <div style={{display:'flex',gap:8,justifyContent:'flex-end',marginTop:8}}>
+          <button onClick={onClose}>Cancelar</button>
+          <button className="primary" onClick={save}>Guardar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ModalTransaccion({ tarjetas, tx, onClose, onSave }) {
+  const [form, setForm] = useState(tx || { tipo:'gasto', monto:'', descripcion:'', categoria:'', fecha:today(), tarjeta_id:'', notas:'' });
+  const [file, setFile] = useState(null);
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const save = async () => {
+    const res = await fetch(`${API}/transacciones`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ ...form, monto: parseFloat(form.monto)||0, tarjeta_id: form.tarjeta_id ? parseInt(form.tarjeta_id) : null }) });
+    const data = await res.json();
+    if (file && data.id) {
+      const fd = new FormData();
+      fd.append('archivo', file);
+      await fetch(`${API}/transacciones/${data.id}/comprobante`, { method:'POST', body: fd });
+    }
+    onSave();
+  };
+
+  return (
+    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <h2>Nueva transacción</h2>
+        <div className="field">
+          <label>Tipo</label>
+          <div className="chip-row" style={{marginBottom:0}}>
+            {[['ingreso','Ingreso'],['gasto','Gasto'],['pago_tdc','Pago TDC']].map(([v,l]) => <div key={v} className={`chip ${form.tipo===v?'active':''}`} onClick={()=>set('tipo',v)}>{l}</div>)}
+          </div>
+        </div>
+        <div className="grid2">
+          <div className="field"><label>Monto</label><input type="number" step="0.01" value={form.monto} onChange={e=>set('monto',e.target.value)} placeholder="0.00" /></div>
+          <div className="field"><label>Fecha</label><input type="date" value={form.fecha} onChange={e=>set('fecha',e.target.value)} /></div>
+        </div>
+        <div className="field"><label>Descripción</label><input value={form.descripcion||''} onChange={e=>set('descripcion',e.target.value)} placeholder="ej. Cena en restaurante" /></div>
+        {form.tipo === 'gasto' && (
+          <div className="field">
+            <label>Categoría</label>
+            <select value={form.categoria||''} onChange={e=>set('categoria',e.target.value)}>
+              <option value="">Sin categoría</option>
+              {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+        )}
+        {(form.tipo === 'gasto' || form.tipo === 'pago_tdc') && tarjetas.length > 0 && (
+          <div className="field">
+            <label>{form.tipo==='pago_tdc' ? 'TDC que se pagó' : 'Cargar a TDC (opcional)'}</label>
+            <select value={form.tarjeta_id||''} onChange={e=>set('tarjeta_id',e.target.value)}>
+              <option value="">— Efectivo / transferencia —</option>
+              {tarjetas.map(t => <option key={t.id} value={t.id}>{t.nombre} ({t.banco||''})</option>)}
+            </select>
+          </div>
+        )}
+        <div className="field"><label>Notas (opcional)</label><textarea rows={2} value={form.notas||''} onChange={e=>set('notas',e.target.value)} /></div>
+        <div className="field">
+          <label>Comprobante (PDF o imagen)</label>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" onChange={e=>setFile(e.target.files[0])} style={{padding:'4px'}} />
+        </div>
+        <div style={{display:'flex',gap:8,justifyContent:'flex-end',marginTop:8}}>
+          <button onClick={onClose}>Cancelar</button>
+          <button className="primary" onClick={save}>Guardar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TarjetasView({ tarjetas, onRefresh }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editando, setEditando] = useState(null);
+
+  const borrar = async (id) => {
+    if (!confirm('¿Eliminar esta tarjeta?')) return;
+    await fetch(`${API}/tarjetas/${id}`, { method:'DELETE' });
+    onRefresh();
+  };
+
+  return (
+    <div style={{padding:'1.5rem', display:'flex', flexDirection:'column', gap:'1rem'}}>
+      <div className="section-header">
+        <h3>Tarjetas de crédito</h3>
+        <button className="primary" onClick={()=>{setEditando(null);setModalOpen(true);}}>+ Nueva tarjeta</button>
+      </div>
+
+      {tarjetas.length === 0 && <div className="empty card">Sin tarjetas. Agrega tu primera TDC.</div>}
+
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))', gap:'1rem'}}>
+        {tarjetas.map(t => {
+          const pct = t.limite_credito > 0 ? Math.min(100, (t.saldo_usado / t.limite_credito) * 100) : 0;
+          const color = pct > 80 ? '#a32d2d' : pct > 50 ? '#ba7517' : t.color;
+          return (
+            <div key={t.id} className="card" style={{borderTop:`3px solid ${t.color}`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'0.75rem'}}>
+                <div>
+                  <div style={{fontWeight:500,fontSize:15}}>{t.nombre}</div>
+                  <div style={{fontSize:12,color:'var(--text3)'}}>{t.banco||'—'}</div>
+                </div>
+                <div style={{display:'flex',gap:4}}>
+                  <button style={{padding:'4px 8px',fontSize:12}} onClick={()=>{setEditando(t);setModalOpen(true);}}>Editar</button>
+                  <button style={{padding:'4px 8px',fontSize:12}} className="danger" onClick={()=>borrar(t.id)}>✕</button>
+                </div>
+              </div>
+
+              <div style={{marginBottom:'0.5rem'}}>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,color:'var(--text2)',marginBottom:2}}>
+                  <span>Usado: {fmt(t.saldo_usado)}</span>
+                  <span>Límite: {fmt(t.limite_credito)}</span>
+                </div>
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{width:`${pct}%`, background: color}} />
+                </div>
+                <div style={{fontSize:12,color:'var(--text3)',marginTop:2}}>Disponible: <strong style={{color:'var(--green)'}}>{fmt(t.saldo_disponible)}</strong></div>
+              </div>
+
+              <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:'0.75rem'}}>
+                {t.proxima_fecha_corte && (
+                  <span className={`badge ${t.dias_para_corte <= 5 ? 'alerta' : 'pago_tdc'}`}>
+                    ✂ Corte: {fmtDate(t.proxima_fecha_corte)} ({t.dias_para_corte}d)
+                  </span>
+                )}
+                {t.proxima_fecha_limite && (
+                  <span className={`badge ${t.dias_para_limite <= 3 ? 'gasto' : t.dias_para_limite <= 7 ? 'alerta' : 'ingreso'}`}>
+                    ⏰ Límite: {fmtDate(t.proxima_fecha_limite)} ({t.dias_para_limite}d)
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {modalOpen && <ModalTarjeta tarjeta={editando} onClose={()=>setModalOpen(false)} onSave={()=>{setModalOpen(false);onRefresh();}} />}
+    </div>
+  );
+}
+
+function TransaccionesView({ tarjetas }) {
+  const [txs, setTxs] = useState([]);
+  const [mes, setMes] = useState(mesActual);
+  const [anio, setAnio] = useState(anioActual);
+  const [filtroTipo, setFiltroTipo] = useState('');
+  const [filtroTarjeta, setFiltroTarjeta] = useState('');
+  const [modal, setModal] = useState(false);
+  const [toast, setToast] = useState('');
+
+  const cargar = useCallback(async () => {
+    let url = `${API}/transacciones?mes=${mes}&anio=${anio}`;
+    if (filtroTipo) url += `&tipo=${filtroTipo}`;
+    if (filtroTarjeta) url += `&tarjeta_id=${filtroTarjeta}`;
+    const res = await fetch(url);
+    setTxs(await res.json());
+  }, [mes, anio, filtroTipo, filtroTarjeta]);
+
+  useEffect(() => { cargar(); }, [cargar]);
+
+  const borrar = async (id) => {
+    if (!confirm('¿Eliminar transacción?')) return;
+    await fetch(`${API}/transacciones/${id}`, { method:'DELETE' });
+    showToast('Transacción eliminada');
+    cargar();
+  };
+
+  const showToast = (msg) => { setToast(msg); setTimeout(()=>setToast(''),2500); };
+
+  const tipoLabel = { ingreso:'Ingreso', gasto:'Gasto', pago_tdc:'Pago TDC' };
+
+  return (
+    <div style={{padding:'1.5rem'}}>
+      <div className="section-header" style={{marginBottom:'1rem'}}>
+        <div style={{display:'flex',gap:8,alignItems:'center'}}>
+          <select value={mes} onChange={e=>setMes(parseInt(e.target.value))} style={{width:'auto'}}>
+            {MESES.map((m,i)=><option key={i+1} value={i+1}>{m}</option>)}
+          </select>
+          <select value={anio} onChange={e=>setAnio(parseInt(e.target.value))} style={{width:'auto'}}>
+            {[2023,2024,2025,2026].map(a=><option key={a} value={a}>{a}</option>)}
+          </select>
+        </div>
+        <button className="primary" onClick={()=>setModal(true)}>+ Transacción</button>
+      </div>
+
+      <div className="chip-row">
+        <div className={`chip ${!filtroTipo?'active':''}`} onClick={()=>setFiltroTipo('')}>Todos</div>
+        <div className={`chip ${filtroTipo==='ingreso'?'active':''}`} onClick={()=>setFiltroTipo('ingreso')}>Ingresos</div>
+        <div className={`chip ${filtroTipo==='gasto'?'active':''}`} onClick={()=>setFiltroTipo('gasto')}>Gastos</div>
+        <div className={`chip ${filtroTipo==='pago_tdc'?'active':''}`} onClick={()=>setFiltroTipo('pago_tdc')}>Pagos TDC</div>
+        {tarjetas.map(t=><div key={t.id} className={`chip ${filtroTarjeta==t.id?'active':''}`} onClick={()=>setFiltroTarjeta(filtroTarjeta==t.id?'':t.id)}><span className="color-dot" style={{background:t.color,marginRight:4}} />{t.nombre}</div>)}
+      </div>
+
+      <div className="card" style={{padding:0,overflow:'hidden'}}>
+        {txs.length === 0 ? (
+          <div className="empty">Sin transacciones en este periodo.</div>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th><th>Descripción</th><th>Categoría</th><th>TDC</th><th>Tipo</th><th style={{textAlign:'right'}}>Monto</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {txs.map(tx => (
+                <tr key={tx.id}>
+                  <td style={{color:'var(--text2)',whiteSpace:'nowrap'}}>{fmtDate(tx.fecha)}</td>
+                  <td>
+                    <div>{tx.descripcion||'—'}</div>
+                    {tx.notas && <div style={{fontSize:12,color:'var(--text3)'}}>{tx.notas}</div>}
+                  </td>
+                  <td>{tx.categoria ? <span className="badge gasto">{tx.categoria}</span> : <span style={{color:'var(--text3)'}}>—</span>}</td>
+                  <td>
+                    {tx.tarjeta_nombre ? (
+                      <span className="tag" style={{borderColor:tx.tarjeta_color,color:tx.tarjeta_color}}>
+                        {tx.tarjeta_nombre}
+                      </span>
+                    ) : <span style={{color:'var(--text3)'}}>—</span>}
+                  </td>
+                  <td><span className={`badge ${tx.tipo}`}>{tipoLabel[tx.tipo]}</span></td>
+                  <td style={{textAlign:'right',fontWeight:500,color: tx.tipo==='ingreso'?'var(--green)':tx.tipo==='pago_tdc'?'var(--accent)':'var(--red)'}}>
+                    {tx.tipo==='ingreso'?'+':'-'}{fmt(tx.monto)}
+                  </td>
+                  <td style={{textAlign:'right',whiteSpace:'nowrap'}}>
+                    {tx.comprobante_nombre && (
+                      <a href={`${API}/comprobante/${tx.id}`} target="_blank" style={{fontSize:12,color:'var(--accent)',marginRight:8}} title={tx.comprobante_nombre}>📎</a>
+                    )}
+                    <button style={{padding:'3px 8px',fontSize:12}} className="danger" onClick={()=>borrar(tx.id)}>✕</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {modal && <ModalTransaccion tarjetas={tarjetas} onClose={()=>setModal(false)} onSave={()=>{setModal(false);cargar();showToast('Transacción guardada');}} />}
+      <Toast msg={toast} />
+    </div>
+  );
+}
+
+function ResumenView({ tarjetas }) {
+  const [data, setData] = useState(null);
+  const [mes, setMes] = useState(mesActual);
+  const [anio, setAnio] = useState(anioActual);
+
+  useEffect(() => {
+    fetch(`${API}/resumen?mes=${mes}&anio=${anio}`)
+      .then(r=>r.json()).then(setData);
+  }, [mes, anio]);
+
+  if (!data) return <div style={{padding:'2rem',color:'var(--text3)'}}>Cargando…</div>;
+
+  const maxCat = data.categorias.length ? Math.max(...data.categorias.map(c=>c.total)) : 1;
+
+  return (
+    <div style={{padding:'1.5rem',display:'flex',flexDirection:'column',gap:'1.25rem'}}>
+      <div style={{display:'flex',gap:8,alignItems:'center'}}>
+        <select value={mes} onChange={e=>setMes(parseInt(e.target.value))} style={{width:'auto'}}>
+          {MESES.map((m,i)=><option key={i+1} value={i+1}>{m}</option>)}
+        </select>
+        <select value={anio} onChange={e=>setAnio(parseInt(e.target.value))} style={{width:'auto'}}>
+          {[2023,2024,2025,2026].map(a=><option key={a} value={a}>{a}</option>)}
+        </select>
+      </div>
+
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))',gap:12}}>
+        <div className="metric">
+          <div className="label">Ingresos</div>
+          <div className="value" style={{color:'var(--green)'}}>{fmt(data.ingresos)}</div>
+        </div>
+        <div className="metric">
+          <div className="label">Gastos</div>
+          <div className="value" style={{color:'var(--red)'}}>{fmt(data.gastos)}</div>
+        </div>
+        <div className="metric">
+          <div className="label">Pagos TDC</div>
+          <div className="value" style={{color:'var(--accent)'}}>{fmt(data.pagos_tdc)}</div>
+        </div>
+        <div className="metric">
+          <div className="label">Balance</div>
+          <div className="value" style={{color:data.balance>=0?'var(--green)':'var(--red)'}}>{fmt(data.balance)}</div>
+        </div>
+        <div className="metric">
+          <div className="label">Deuda TDC total</div>
+          <div className="value" style={{color:'var(--amber)'}}>{fmt(data.deuda_tdc_total)}</div>
+        </div>
+      </div>
+
+      {data.categorias.length > 0 && (
+        <div className="card">
+          <div style={{fontWeight:500,marginBottom:'1rem',fontSize:14}}>Gastos por categoría</div>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {data.categorias.map(c => (
+              <div key={c.categoria}>
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:13,marginBottom:3}}>
+                  <span>{c.categoria}</span>
+                  <span style={{fontWeight:500}}>{fmt(c.total)}</span>
+                </div>
+                <div className="progress-bar" style={{height:8}}>
+                  <div className="progress-fill" style={{width:`${(c.total/maxCat)*100}%`,background:'var(--accent)'}} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tarjetas.length > 0 && (
+        <div className="card">
+          <div style={{fontWeight:500,marginBottom:'1rem',fontSize:14}}>Estado de tarjetas</div>
+          <div style={{display:'flex',flexDirection:'column',gap:16}}>
+            {tarjetas.map(t => {
+              const pct = t.limite_credito > 0 ? Math.min(100,(t.saldo_usado/t.limite_credito)*100) : 0;
+              return (
+                <div key={t.id}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:4}}>
+                    <span style={{fontWeight:500,fontSize:14}}><span className="color-dot" style={{background:t.color,marginRight:6}} />{t.nombre}</span>
+                    <span style={{fontSize:13,color:'var(--text2)'}}>{fmt(t.saldo_usado)} / {fmt(t.limite_credito)}</span>
+                  </div>
+                  <div className="progress-bar" style={{height:8}}>
+                    <div className="progress-fill" style={{width:`${pct}%`,background: pct>80?'var(--red)':pct>50?'#ba7517':t.color}} />
+                  </div>
+                  <div style={{display:'flex',gap:8,marginTop:6,flexWrap:'wrap'}}>
+                    {t.proxima_fecha_corte && <span className={`badge ${t.dias_para_corte<=5?'alerta':'pago_tdc'}`}>Corte {fmtDate(t.proxima_fecha_corte)}</span>}
+                    {t.proxima_fecha_limite && <span className={`badge ${t.dias_para_limite<=3?'gasto':t.dias_para_limite<=7?'alerta':'ingreso'}`}>Pago límite {fmtDate(t.proxima_fecha_limite)}</span>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState('resumen');
+  const [tarjetas, setTarjetas] = useState([]);
+  const [error, setError] = useState(false);
+
+  const cargarTarjetas = useCallback(async () => {
+    try {
+      const res = await fetch(`${API}/tarjetas`);
+      setTarjetas(await res.json());
+      setError(false);
+    } catch {
+      setError(true);
+    }
+  }, []);
+
+  useEffect(() => { cargarTarjetas(); }, [cargarTarjetas]);
+
+  if (error) return (
+    <div style={{padding:'3rem',textAlign:'center',color:'var(--text2)'}}>
+      <div style={{fontSize:24,marginBottom:'0.5rem'}}>⚠️</div>
+      <div style={{fontWeight:500,marginBottom:'0.5rem'}}>No se puede conectar al servidor</div>
+      <div style={{fontSize:13}}>Asegúrate de que el backend esté corriendo en <code>http://localhost:8000</code></div>
+      <br/>
+      <button onClick={cargarTarjetas}>Reintentar</button>
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:'100vh'}}>
+      <header style={{background:'var(--surface)',borderBottom:'0.5px solid var(--border)',padding:'1rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{fontSize:20}}>💳</span>
+          <span style={{fontWeight:500,fontSize:16}}>Finanzas Personales</span>
+        </div>
+        <span style={{fontSize:12,color:'var(--text3)'}}>
+          {new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+        </span>
+      </header>
+
+      <div className="nav">
+        {[['resumen','📊 Resumen'],['tarjetas','💳 Tarjetas'],['transacciones','📋 Transacciones']].map(([id,label]) => (
+          <button key={id} className={`nav-btn ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{label}</button>
+        ))}
+      </div>
+
+      <div style={{background:'var(--surface)',borderBottom:'0.5px solid var(--border)'}}>
+        {tab === 'resumen' && <ResumenView tarjetas={tarjetas} />}
+        {tab === 'tarjetas' && <TarjetasView tarjetas={tarjetas} onRefresh={cargarTarjetas} />}
+        {tab === 'transacciones' && <TransaccionesView tarjetas={tarjetas} />}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

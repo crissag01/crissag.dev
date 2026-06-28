@@ -1,0 +1,11 @@
+<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nodeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#339933;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#68a063;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="8" fill="rgba(51, 153, 51, 0.1)" stroke="url(#nodeGrad)" stroke-width="1.5"/>
+  <path d="M 20 12 L 28 16 L 28 24 L 20 28 L 12 24 L 12 16 Z" fill="none" stroke="#68a063" stroke-width="1.5"/>
+  <circle cx="20" cy="20" r="2.5" fill="#339933"/>
+</svg>

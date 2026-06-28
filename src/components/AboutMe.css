@@ -1,0 +1,51 @@
+#about-me {
+  position: relative;
+  z-index: 10;
+  padding: 4rem 2rem;
+  background: transparent;
+  backdrop-filter: blur(2px);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#about-me h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+#about-me p {
+  font-size: 1.05rem;
+  color: #c0c0d0;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+#about-me p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  #about-me {
+    padding: 2rem 1rem;
+  }
+
+  #about-me h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  #about-me p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}
