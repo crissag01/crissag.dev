@@ -1,0 +1,153 @@
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.01);
+  border-radius: 12px;
+  border: 1px solid rgba(192, 132, 252, 0.1);
+}
+
+.file-card {
+  background: rgba(22, 23, 29, 0.8);
+  border: 1px solid rgba(192, 132, 252, 0.2);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.file-card:hover {
+  border-color: rgba(192, 132, 252, 0.5);
+  background: rgba(192, 132, 252, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(192, 132, 252, 0.2);
+}
+
+.file-icon {
+  font-size: 2.5rem;
+}
+
+.file-info {
+  flex: 1;
+  width: 100%;
+}
+
+.file-name {
+  color: #f3f4f6;
+  font-size: 0.95rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-weight: 600;
+}
+
+.file-type {
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin: 0.25rem 0 0 0;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.3rem;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.file-card:hover .file-actions {
+  opacity: 1;
+}
+
+.action-btn {
+  flex: 0 1 calc(50% - 0.15rem);
+  padding: 0.35rem 0.4rem;
+  background: rgba(192, 132, 252, 0.1);
+  border: 1px solid rgba(192, 132, 252, 0.3);
+  color: #c084fc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  background: rgba(192, 132, 252, 0.2);
+}
+
+.action-btn.delete:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.folder-btn {
+  flex: 0 1 calc(50% - 0.15rem);
+  padding: 0.35rem 0.4rem;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-btn:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+  border-color: #22c55e;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px dashed rgba(192, 132, 252, 0.2);
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+  }
+
+  .file-card {
+    padding: 1rem;
+  }
+
+  .file-icon {
+    font-size: 2rem;
+  }
+
+  .file-name {
+    font-size: 0.85rem;
+  }
+
+  .file-actions {
+    opacity: 1;
+  }
+
+  .folder-btn {
+    opacity: 1;
+  }
+}

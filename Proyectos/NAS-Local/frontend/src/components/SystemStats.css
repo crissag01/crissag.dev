@@ -1,0 +1,144 @@
+.system-stats {
+  display: flex;
+  flex-direction: column;
+  background: rgba(22, 23, 29, 0.8);
+  border-left: 2px solid rgba(192, 132, 252, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(192, 132, 252, 0.05);
+  border-bottom: 1px solid rgba(192, 132, 252, 0.1);
+}
+
+.stats-header h3 {
+  color: #c084fc;
+  font-size: 0.9rem;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.stats-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-size: 0.85rem;
+}
+
+.stats-loading {
+  color: #6b7280;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem 0.3rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border: 1px solid rgba(192, 132, 252, 0.1);
+}
+
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #c0c0d0;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.stat-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #c084fc;
+  text-align: center;
+  padding: 0.4rem 0;
+}
+
+.stat-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.stat-detail {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* Scrollbar para stats */
+.stats-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stats-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.stats-content::-webkit-scrollbar-thumb {
+  background: rgba(192, 132, 252, 0.3);
+  border-radius: 3px;
+}
+
+.stats-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(192, 132, 252, 0.5);
+}
+
+@media (max-width: 768px) {
+  .stats-content {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .stat-item {
+    flex: 1;
+    padding: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 0.95rem;
+  }
+
+  .stat-label {
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+  }
+
+  .stat-detail {
+    font-size: 0.6rem;
+  }
+
+  .stat-icon {
+    font-size: 0.9rem;
+  }
+}
