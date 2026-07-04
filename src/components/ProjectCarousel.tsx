@@ -33,8 +33,10 @@ export function ProjectCarousel() {
               <div className="project-content">
                 <h3>{project.title}</h3>
                 <p className="short-description">{project.description}</p>
+                <p className="price-tag">Desde {project.price}</p>
 
                 <div className={`expanded-content ${hoveredId === project.id ? 'show' : ''}`}>
+                  <p className="problem"><strong>Problema:</strong> {project.problem}</p>
                   <p className="full-description">{project.fullDescription}</p>
                   <div className="technologies">
                     {project.technologies.map((tech) => (
@@ -47,7 +49,7 @@ export function ProjectCarousel() {
                     className="project-link"
                     onClick={() => setSelectedProject(project)}
                   >
-                    Ver Proyecto →
+                    Ver Detalles →
                   </button>
                 </div>
               </div>
