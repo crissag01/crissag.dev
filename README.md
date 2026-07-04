@@ -91,11 +91,17 @@ Documentación completa: `Proyectos/n8n-flows-docs/`
 
 ## 🔐 Seguridad
 
+### Prácticas
 - ✅ No se almacenan credenciales en el código
 - ✅ Variables de entorno en `.env.local`
 - ✅ HTTPS solo en producción
 - ✅ Headers de seguridad configurados
 - ✅ CSP (Content Security Policy) activo
+
+### Políticas de GitHub
+- 🔒 **Security Policy** - Disabled (Reportar vulnerabilidades: crissag@proton.me)
+- 🔒 **Dependabot Alerts** - Disabled (Monitoreo de dependencias)
+- 🔒 **Code Scanning** - Disabled (Advanced Security para Organizaciones)
 
 ## 📝 Convenciones de Código
 
