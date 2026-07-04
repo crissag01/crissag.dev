@@ -3,6 +3,7 @@ import { Hero } from './components/Hero'
 import { AboutMe } from './components/AboutMe'
 import { TestimonialCarousel } from './components/TestimonialCarousel'
 import { ProjectCarousel } from './components/ProjectCarousel'
+import { ContactForm } from './components/ContactForm'
 import './App.css'
 
 function App() {
@@ -17,17 +18,7 @@ function App() {
 
       <section id="contact">
         <h2>Conectemos</h2>
-        <div className="social-links">
-          <a href="https://github.com/crissag01/Projects.git" target="_blank" rel="noopener noreferrer" className="social-link">
-            GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/cristofer-aguilar-249694382/" target="_blank" rel="noopener noreferrer" className="social-link">
-            LinkedIn
-          </a>
-          <a href="mailto:crissag@proton.me" className="social-link">
-            Email
-          </a>
-        </div>
+        <ContactForm />
       </section>
 
       <footer>

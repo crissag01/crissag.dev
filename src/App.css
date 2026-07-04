@@ -29,30 +29,6 @@ body {
   font-weight: 700;
 }
 
-.social-links {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.social-link {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.social-link:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(167, 139, 250, 0.4);
-  border-color: #c4b5fd;
-}
 
 /* Footer */
 footer {
