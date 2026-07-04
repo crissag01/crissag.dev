@@ -50,39 +50,6 @@ Portafolio personal de Cristofer Aguilar mostrando proyectos, automatizaciones y
 - npm (package manager)
 - Git
 
-## 💻 Requisitos Previos
-
-- Node.js 20.19+ o 22.12+
-- npm 10+
-- Git
-
-## 🛠️ Instalación Local
-
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/crissag01/crissag.dev.git
-cd crissag.dev
-```
-
-### 2. Instalar dependencias
-```bash
-npm install
-```
-
-### 3. Ejecutar servidor de desarrollo
-```bash
-npm run dev
-```
-
-El sitio estará disponible en `http://localhost:20413` (o el siguiente puerto disponible).
-
-### 4. Build para producción
-```bash
-npm run build
-```
-
-Output estará en la carpeta `dist/`.
-
 ## 📁 Guía de Componentes
 
 ### DynamicBackground
@@ -199,16 +166,6 @@ MIT License - Libre para usar y modificar
 - [ ] Dashboard de analytics
 - [ ] Modo oscuro/claro selector
 - [ ] Traducción a múltiples idiomas
-
-## 🤝 Contribuciones
-
-Las sugerencias y mejoras son bienvenidas. Para cambios mayores:
-
-1. Fork el proyecto
-2. Crea una rama (`git checkout -b feature/improvement`)
-3. Commit cambios (`git commit -m 'Add improvement'`)
-4. Push a la rama (`git push origin feature/improvement`)
-5. Abre un Pull Request
 
 ---
 
