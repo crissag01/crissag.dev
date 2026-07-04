@@ -1,0 +1,1021 @@
+{
+  "name": "Facturas (Whatsapp)",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloud.llamaindex.ai/api/v1/parsing/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.LLAMAINDEX_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        0
+      ],
+      "id": "da2428fe-38c8-4d0a-ab53-4cb9f9423313",
+      "name": "Subir archivo"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.llamaindex.ai/api/v1/parsing/job/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.LLAMAINDEX_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3056,
+        -32
+      ],
+      "id": "37e255be-ef50-4535-adef-74bad9613537",
+      "name": "Obtener info"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "SUCCESS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c5d01385-facd-4371-bb26-9be2216a750b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SUCCESS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d554f758-7801-457d-a37f-c29d1b569889",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "PENDING",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PENDING"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        3248,
+        -32
+      ],
+      "id": "69015767-b5de-4186-8017-ecbbae19eaed",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.cloud.llamaindex.ai/api/v1/parsing/job/{{ $json.id }}/result/markdown",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.LLAMAINDEX_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3456,
+        -128
+      ],
+      "id": "d4dba255-5b23-4115-a1eb-cbaa9d281ae6",
+      "name": "Descargar info"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3456,
+        64
+      ],
+      "id": "d00678eb-2da9-47b3-a9cd-a51a8d91fe9b",
+      "name": "Wait",
+      "webhookId": "REDACTED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "promptType": "=define",
+        "text": "={{ $json.markdown }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Eres un asistente experto en extracci\u00c3\u00b3n y procesamiento de datos de documentos, especializado en identificar con precision los detalles clave de una factura."
+            },
+            {
+              "message": "=Tu tarea es extraer el CIF,NIF,el numero de factura, la fecha de emision, el subtotal,el impuesto (IVA) y el importe total de cualquier texto de factura proporcionada, devolviendo los datos en JSON estructurado con maxima precision.\n\nIMPORTANTE:\nSolo responde con el JSON en el siguiente formato:\n{\n\"Nombre_Factura\":\"\",\n\"Fecha\":\"\",\n\"CIF\":\"\",\n\"Subtotal\":\"\",\n\"IVA\":\"\",\n\"Importe_total\":\"\"\n}"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        3664,
+        -96
+      ],
+      "id": "2d19a532-ab6f-4219-90d7-25c41504f44c",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3664,
+        80
+      ],
+      "id": "e91d5d24-517c-4991-b187-df11076e219e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"Nombre_Factura\":\"\",\n\"Fecha\":\"\",\n\"CIF\":\"\",\n\"Subtotal\":\"\",\n\"IVA\":\"\",\n\"Importe_total\":\"\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3824,
+        80
+      ],
+      "id": "6c8761f3-485b-4f51-9173-f7119dc8ab75",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "Disparador de Telegram:\n\nObtiene los menajes recientes asi como el chat y clasifica los datos por separado",
+        "height": 128,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -160
+      ],
+      "id": "2592d2cf-da48-4c64-bf28-bb8c9aa5a5ad",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "(EN ESTA PARTE DEL FLUJO AMBOS NODOS TIENEN EXACTAMENTE LA MISMA INFORMACION)",
+        "width": 150,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        160
+      ],
+      "id": "c75ed284-13fd-48ac-8949-336d60564e20",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "Este nodo reinicia (dependiendo el tiempo establecido) el nodo al que se conecte hasta que el resultado sea el esperado",
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3344,
+        272
+      ],
+      "id": "ec7d5e59-7db6-47dc-88b6-162a84ab66ad",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Organiza la informcion en el documento uando variables ya configuradas anteriormente",
+        "width": 150,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4144,
+        -288
+      ],
+      "id": "e71d7c0d-44e9-480e-b8b7-b4faee108fe0",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "content": "Envia un mensaje al usuario junto con la informacion en contrada",
+        "width": 150,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4384,
+        -304
+      ],
+      "id": "b2a2b29b-7e93-45c0-920e-2fb277a18616",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "Aqui se establece el formato del texto mediante codigo JSON.\n\nej. \"Nombre Factura\":\"Aqui se escribe la variable con los datos\"",
+        "height": 272,
+        "width": 160,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3712,
+        240
+      ],
+      "id": "a1708ef8-555a-4699-be96-2c2a45324429",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "Facturasws",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "39150817-4fc5-4d29-ba9b-d82e4904b922",
+      "name": "Recibir factura por Whatsapp",
+      "webhookId": "REDACTED_WEBHOOK_ID"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Extraer datos de chat').item.json['Tipo de archivo'] }}",
+                    "rightValue": "=application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "6bea23c9-0e0e-4b32-a5a2-d5516e425e88"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d13accf4-30a4-4681-ac5e-3fcff9d29df4",
+                    "leftValue": "={{ $json['Tipo de archivo'] }}",
+                    "rightValue": "image/jpeg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "5c7c5d22-d1a9-4186-93a7-51865bacde55",
+      "name": "Clasificar"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url_servidor }}/message/sendText/{{ $json.Instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $json.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.chatid }}"
+            },
+            {
+              "name": "text",
+              "value": "Hola hemos recibido tu mensaje y lo estamos procesando"
+            },
+            {
+              "name": "delay",
+              "value": "={{5000}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "297951fe-5e23-4092-bb44-6c1cd4464ec6",
+      "name": "Notificaci\u00c3\u00b3n de recibido"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "REDACTED_FILE_ID",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/119ep33CIDAwrXcm0SXhyBH20Ca--GFX3-KzzlxBd9Ps/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre_Factura": "={{ $('Basic LLM Chain').item.json.output.Nombre_Factura }}",
+            "Fecha": "={{ $('Basic LLM Chain').item.json.output.Fecha }}",
+            "CIF": "={{ $('Basic LLM Chain').item.json.output.CIF }}",
+            "Subtotal": "={{ $('Basic LLM Chain').item.json.output.Subtotal }}",
+            "IVA": "={{ $('Basic LLM Chain').item.json.output.IVA }}",
+            "M\u00c3\u00a9todo de Pago": "=",
+            "Importe_total": "={{ $('Basic LLM Chain').item.json.output.Importe_total }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre_Factura",
+              "displayName": "Nombre_Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "CIF",
+              "displayName": "CIF",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Subtotal",
+              "displayName": "Subtotal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "IVA",
+              "displayName": "IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Importe_total",
+              "displayName": "Importe_total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "M\u00c3\u00a9todo de Pago",
+              "displayName": "M\u00c3\u00a9todo de Pago",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Forma de Pago",
+              "displayName": "Forma de Pago",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Subtotal",
+              "displayName": "Subtotal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "IVA",
+              "displayName": "IVA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Total",
+              "displayName": "Total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Moneda",
+              "displayName": "Moneda",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Conceptos",
+              "displayName": "Conceptos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Uso del CFDI",
+              "displayName": "Uso del CFDI",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4176,
+        -96
+      ],
+      "id": "cc9a8f9e-b895-4133-bfae-b3c42c900133",
+      "name": "Organizar informacion",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REDACTED_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "771426af-9acf-4e62-8b2b-97d327645bd6",
+              "name": "chatid",
+              "value": "={{ $json.body.data.key.senderPn }}",
+              "type": "string"
+            },
+            {
+              "id": "3a1d2e6c-fcba-4e4b-951d-9aa95bb89898",
+              "name": "apikey",
+              "value": "={{ $json.body.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "77b9c169-dd21-4744-9394-eb2f78b55bc9",
+              "name": "Instancia",
+              "value": "={{ $json.body.instance }}",
+              "type": "string"
+            },
+            {
+              "id": "38a2f930-0577-448c-8303-263df9705466",
+              "name": "url_servidor",
+              "value": "={{ $json.body.server_url }}",
+              "type": "string"
+            },
+            {
+              "id": "5ef9f05f-d075-4968-b20f-3a1137f7ca11",
+              "name": "Tipo de archivo",
+              "value": "={{ $json.body.data.message.imageMessage.mimetype }}{{ $json.body.data.message.documentMessage.mimetype }}",
+              "type": "string"
+            },
+            {
+              "id": "a0794e9d-3ddd-48ef-a97f-3f52e3f3407c",
+              "name": "data",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ],
+      "id": "d099e185-6887-45ea-98cd-11eee8138d4b",
+      "name": "Extraer datos de chat"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1296,
+        0
+      ],
+      "id": "30cbd528-9d09-49d6-98e6-592f77ff6165",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e615353e-eb78-44e5-81e0-9872674b3d06",
+              "name": "chatid",
+              "value": "={{ $('Merge').item.json.chatid }}",
+              "type": "string"
+            },
+            {
+              "id": "0f596366-638c-424d-91d9-6605e684541e",
+              "name": "apikey",
+              "value": "={{ $('Merge').item.json.apikey }}",
+              "type": "string"
+            },
+            {
+              "id": "9b623b0a-7958-4606-aa2c-41bb125adc3b",
+              "name": "Instancia",
+              "value": "={{ $('Merge').item.json.Instancia }}",
+              "type": "string"
+            },
+            {
+              "id": "bc7e05d6-dac6-4046-a6d6-14c453cad119",
+              "name": "url_servidor",
+              "value": "={{ $('Merge').item.json.url_servidor }}",
+              "type": "string"
+            },
+            {
+              "id": "0ca7b07c-8865-45a2-956c-84a4bb04e648",
+              "name": "Tipo de archivo",
+              "value": "={{ $('Merge').item.json['Tipo de archivo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a41028bf-6fa3-4798-804d-515db9d4e52c",
+              "name": "data",
+              "value": "={{ $('Merge').item.json.data }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1872,
+        0
+      ],
+      "id": "2a62b734-93bf-4065-a51f-269851cfea07",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2112,
+        0
+      ],
+      "id": "eb601be7-2276-4e5b-8bfa-2483093d6590",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Recibir factura por Whatsapp').item.json.body.server_url }}/message/sendText/{{ $('Extraer datos de chat').item.json.Instancia }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "={{ $('Extraer datos de chat').item.json.apikey }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Extraer datos de chat').item.json.chatid }}"
+            },
+            {
+              "name": "text",
+              "value": "=Esta es la informacion que hemos encontrado:\n\"Nombre de factura\":{{ $json.Nombre_Factura }},\n\"Fecha\":{{ $json.Fecha }},\n\"CIF\":{{ $json.CIF }}.\n\"Subtotal\":{{ $json.Subtotal }}.\n\"IVA\":{{ $json.IVA }},\n\"Metodo de pago\":{{ $json['M\u00c3\u00a9todo de Pago'] }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{5000}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4416,
+        -96
+      ],
+      "id": "e097cf35-b4ad-4f0d-a481-700201cd7b67",
+      "name": "Notificaci\u00c3\u00b3n informaci\u00c3\u00b3n encontrada"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Subir archivo": {
+      "main": [
+        [
+          {
+            "node": "Obtener info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener info": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Descargar info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Obtener info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar info": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Organizar informacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir factura por Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "Extraer datos de chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Notificaci\u00c3\u00b3n de recibido": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Organizar informacion": {
+      "main": [
+        [
+          {
+            "node": "Notificaci\u00c3\u00b3n informaci\u00c3\u00b3n encontrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer datos de chat": {
+      "main": [
+        [
+          {
+            "node": "Clasificar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Notificaci\u00c3\u00b3n de recibido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Subir archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "c8QNQyifIVHiIX1c"
+  },
+  "versionId": "d7a5e08b-8d1b-471d-9ca1-aed26e9bc46d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "11b2444ebdf37e1adba22617df3ef520a982fbdb367b9495bda4df5a719f04b6"
+  },
+  "id": "y16t8oMUB4kIGQXU",
+  "tags": []
+}
