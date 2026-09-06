@@ -4,11 +4,39 @@ import rateLimit from 'express-rate-limit'
 import nodemailer from 'nodemailer'
 import fetch from 'node-fetch'
 import dotenv from 'dotenv'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const dataDir = path.join(__dirname, 'data')
+const commentsFile = path.join(dataDir, 'comments.json')
+
+function loadComments() {
+  try {
+    return JSON.parse(fs.readFileSync(commentsFile, 'utf-8'))
+  } catch {
+    return []
+  }
+}
+
+function saveComments(list) {
+  fs.mkdirSync(dataDir, { recursive: true })
+  fs.writeFileSync(commentsFile, JSON.stringify(list, null, 2))
+}
+
+function requireAdmin(req, res, next) {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  if (!process.env.ADMIN_TOKEN || token !== process.env.ADMIN_TOKEN) {
+    return res.status(401).json({ success: false, error: 'No autorizado' })
+  }
+  next()
+}
 
 app.use(express.json())
 app.use(cors({
@@ -34,7 +62,7 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-const comments = []
+const comments = loadComments()
 
 async function verifyCloudflareTurnstile(token) {
   try {
@@ -177,17 +205,18 @@ app.post('/api/comments', limiter, async (req, res) => {
       comment: sanitizedComment,
       rating: parseInt(rating),
       createdAt: new Date().toISOString(),
-      approved: true
+      approved: false
     }
 
     comments.unshift(newComment)
+    saveComments(comments)
 
     const notificationEmail = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: process.env.CONTACT_EMAIL,
-      subject: `Nuevo comentario en crissag.dev - ${sanitizedName}`,
+      subject: `Nuevo comentario pendiente de aprobación - ${sanitizedName}`,
       html: `
-        <h2>Nuevo Comentario</h2>
+        <h2>Nuevo Comentario (pendiente de moderación)</h2>
         <p><strong>Nombre:</strong> ${sanitizedName}</p>
         <p><strong>Email:</strong> ${sanitizedEmail}</p>
         <p><strong>Proyecto:</strong> ${sanitizeInput(projectId)}</p>
@@ -195,7 +224,7 @@ app.post('/api/comments', limiter, async (req, res) => {
         <p><strong>Comentario:</strong></p>
         <p>${sanitizedComment.replace(/\n/g, '<br>')}</p>
         <hr>
-        <p><small>Revisa tu portafolio para ver si fue publicado.</small></p>
+        <p><small>Apruébalo o recházalo desde el panel de moderación antes de que se publique.</small></p>
       `
     }
 
@@ -207,7 +236,7 @@ app.post('/api/comments', limiter, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Comentario enviado correctamente'
+      message: 'Comentario enviado. Será visible tras ser revisado.'
     })
   } catch (error) {
     console.error('Comments error:', error)
@@ -232,6 +261,31 @@ app.get('/api/comments', (req, res) => {
       error: 'Error al obtener comentarios'
     })
   }
+})
+
+app.get('/api/comments/pending', requireAdmin, (req, res) => {
+  const pending = comments.filter(c => !c.approved)
+  res.json({ success: true, comments: pending })
+})
+
+app.post('/api/comments/:id/approve', requireAdmin, (req, res) => {
+  const comment = comments.find(c => c.id === req.params.id)
+  if (!comment) {
+    return res.status(404).json({ success: false, error: 'Comentario no encontrado' })
+  }
+  comment.approved = true
+  saveComments(comments)
+  res.json({ success: true, comment })
+})
+
+app.delete('/api/comments/:id', requireAdmin, (req, res) => {
+  const index = comments.findIndex(c => c.id === req.params.id)
+  if (index === -1) {
+    return res.status(404).json({ success: false, error: 'Comentario no encontrado' })
+  }
+  comments.splice(index, 1)
+  saveComments(comments)
+  res.json({ success: true })
 })
 
 app.listen(PORT, () => {

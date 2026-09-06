@@ -19,10 +19,20 @@ export function Hero() {
     { name: 'React', icon: '/stack/react.svg' },
     { name: 'Node.js', icon: '/stack/nodejs.svg' },
     { name: 'TypeScript', icon: '/stack/typescript.svg' },
+    { name: 'HTML5', icon: '/stack/html5.svg' },
     { name: 'Docker', icon: '/stack/docker.svg' },
+    { name: 'Linux', icon: '/stack/linux.svg' },
+    { name: 'Git', icon: '/stack/git.svg' },
+    { name: 'APIs', icon: '/stack/api.svg' },
     { name: 'n8n', icon: '/stack/n8n.svg' },
+    { name: 'WhatsApp/Telegram Bots', icon: '/stack/bots.svg' },
+    { name: 'AI Agents', icon: '/stack/ai-agents.svg' },
     { name: 'Claude', icon: '/stack/claude.svg' },
     { name: 'OpenAI', icon: '/stack/openai.svg' },
+    { name: 'PostgreSQL/MySQL', icon: '/stack/database.svg' },
+    { name: 'Google Sheets', icon: '/stack/google-sheets.svg' },
+    { name: 'WordPress', icon: '/stack/wordpress.svg' },
+    { name: 'cPanel', icon: '/stack/cpanel.svg' },
   ]
 
   return (
@@ -44,7 +54,7 @@ export function Hero() {
             <div className="profile-content">
               {/* Foto de Perfil */}
               <div className="profile-photo">
-                <img src="/profile'photo.png" alt="Cristofer Aguilar" />
+                <img src="/profile-photo.webp" alt="Cristofer Aguilar" width={180} height={180} loading="eager" />
               </div>
 
               {/* Información Principal */}

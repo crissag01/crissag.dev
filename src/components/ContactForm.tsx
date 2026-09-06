@@ -28,33 +28,57 @@ export function ContactForm() {
   const [honeypot, setHoneypot] = useState('')
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const turnstileWidgetId = useRef<string | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const MAX_MESSAGE_LENGTH = 5000
 
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-    script.async = true
-    script.defer = true
-    document.head.appendChild(script)
+    let script: HTMLScriptElement | null = null
 
-    script.onload = () => {
-      const turnstile = window.turnstile as Turnstile
-      if (turnstile?.ready) {
-        turnstile.ready(() => {
-          const siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITEKEY
-          if (siteKey && document.getElementById('turnstile-widget')) {
-            turnstileWidgetId.current = turnstile.render?.('turnstile-widget', {
-              sitekey: siteKey,
-              theme: 'dark',
-              size: 'normal'
-            }) || null
-          }
-        })
+    const loadTurnstile = () => {
+      if (script) return
+
+      script = document.createElement('script')
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+      script.async = true
+      script.defer = true
+      document.head.appendChild(script)
+
+      script.onload = () => {
+        const turnstile = window.turnstile as Turnstile
+        if (turnstile?.ready) {
+          turnstile.ready(() => {
+            const siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITEKEY
+            if (siteKey && document.getElementById('turnstile-widget')) {
+              turnstileWidgetId.current = turnstile.render?.('turnstile-widget', {
+                sitekey: siteKey,
+                theme: 'dark',
+                size: 'normal'
+              }) || null
+            }
+          })
+        }
       }
     }
 
+    // Carga Turnstile solo cuando el usuario se acerca al formulario, no al abrir la página.
+    // Evita que el navegador pida permiso de almacenamiento de terceros de inmediato.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadTurnstile()
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '200px' }
+    )
+
+    if (formRef.current) {
+      observer.observe(formRef.current)
+    }
+
     return () => {
-      if (script.parentNode) {
+      observer.disconnect()
+      if (script?.parentNode) {
         script.parentNode.removeChild(script)
       }
     }
@@ -181,7 +205,7 @@ export function ContactForm() {
 
   return (
     <>
-      <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      <form ref={formRef} className="contact-form" onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="name">
             Nombre
@@ -302,10 +326,6 @@ export function ContactForm() {
           onClose={() => setToast(null)}
         />
       )}
-
-      <script>
-        {`declare global { interface Window { turnstile?: any } }`}
-      </script>
     </>
   )
 }

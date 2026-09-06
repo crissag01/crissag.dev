@@ -1,0 +1,15 @@
+<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="botsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#25d366;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#26a5e4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="40" height="40" rx="8" fill="rgba(37, 211, 102, 0.1)" stroke="url(#botsGrad)" stroke-width="1.5"/>
+  <rect x="12" y="13" width="16" height="12" rx="4" fill="none" stroke="url(#botsGrad)" stroke-width="1.8"/>
+  <circle cx="16.5" cy="19" r="1.6" fill="#25d366"/>
+  <circle cx="23.5" cy="19" r="1.6" fill="#26a5e4"/>
+  <line x1="20" y1="13" x2="20" y2="10" stroke="url(#botsGrad)" stroke-width="1.6" stroke-linecap="round"/>
+  <circle cx="20" cy="9" r="1.4" fill="#26a5e4"/>
+  <path d="M 15 28 L 20 25 L 25 28" fill="none" stroke="url(#botsGrad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

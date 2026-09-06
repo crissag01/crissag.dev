@@ -80,7 +80,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
       if (data.success) {
         setToast({
-          message: '✓ Gracias por tu comentario. Será visible pronto.',
+          message: '✓ Gracias por tu comentario. Será visible después de ser revisado.',
           type: 'success'
         })
         setFormData({
