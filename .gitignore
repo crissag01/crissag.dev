@@ -31,7 +31,9 @@ Thumbs.db
 pids/
 *.pid
 *.seed
-/data/comments.json
+
+# Vercel
+.vercel
 
 # Temporary
 temp/

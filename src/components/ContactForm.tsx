@@ -39,8 +39,8 @@ export function ContactForm() {
 
       script = document.createElement('script')
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-      script.async = true
-      script.defer = true
+      // Sin async/defer: Turnstile exige que el script no tenga estos atributos
+      // cuando se usa turnstile.ready() manualmente, o lanza un TurnstileError.
       document.head.appendChild(script)
 
       script.onload = () => {
@@ -78,6 +78,10 @@ export function ContactForm() {
 
     return () => {
       observer.disconnect()
+      const turnstile = window.turnstile as Turnstile
+      if (turnstileWidgetId.current && turnstile?.remove) {
+        turnstile.remove(turnstileWidgetId.current)
+      }
       if (script?.parentNode) {
         script.parentNode.removeChild(script)
       }
@@ -150,7 +154,9 @@ export function ContactForm() {
     }
 
     const turnstile = window.turnstile as Turnstile
-    const token = turnstile?.getResponse?.(turnstileWidgetId.current || '')
+    const token = turnstileWidgetId.current
+      ? turnstile?.getResponse?.(turnstileWidgetId.current)
+      : undefined
 
     if (!token) {
       setErrors({
@@ -163,7 +169,7 @@ export function ContactForm() {
     setErrors({})
 
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + '/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -184,8 +190,8 @@ export function ContactForm() {
           type: 'success'
         })
         setFormData({ name: '', email: '', message: '' })
-        if (turnstile?.reset) {
-          turnstile.reset(turnstileWidgetId.current || '')
+        if (turnstileWidgetId.current && turnstile?.reset) {
+          turnstile.reset(turnstileWidgetId.current)
         }
       } else {
         setToast({

@@ -19,7 +19,7 @@ export function TestimonialCarousel() {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + '/api/comments')
+      const response = await fetch('/api/comments')
       const data = await response.json()
       if (data.success) {
         setComments(data.comments || [])

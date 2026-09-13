@@ -62,7 +62,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
     setIsLoading(true)
 
     try {
-      const response = await fetch(import.meta.env.VITE_API_URL + '/api/comments', {
+      const response = await fetch('/api/comments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
