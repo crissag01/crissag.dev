@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { CommentForm } from './CommentForm'
 import { projects } from '../data/projects'
+import { useLanguage } from '../i18n/LanguageContext'
 import './TestimonialCarousel.css'
 
 interface Comment {
@@ -16,6 +17,7 @@ interface Comment {
 export function TestimonialCarousel() {
   const [comments, setComments] = useState<Comment[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { t, language } = useLanguage()
 
   const fetchComments = async () => {
     try {
@@ -45,23 +47,23 @@ export function TestimonialCarousel() {
 
   const getProjectName = (projectId: string) => {
     const project = projects.find(p => p.id === parseInt(projectId))
-    return project?.title || 'Proyecto desconocido'
+    return project?.translations[language].title || 'Unknown project'
   }
 
   return (
     <section id="testimonials">
-      <h2>Opiniones de Visitantes</h2>
+      <h2>{t('feedback.heading')}</h2>
 
       <CommentForm onCommentAdded={fetchComments} />
 
       <div className="comments-section">
         {isLoading ? (
           <div className="loading-state">
-            <p>Cargando comentarios...</p>
+            <p>{t('feedback.loading')}</p>
           </div>
         ) : comments.length === 0 ? (
           <div className="empty-state">
-            <p>No hay comentarios aún. ¡Sé el primero en dejar uno!</p>
+            <p>{t('feedback.empty')}</p>
           </div>
         ) : (
           <div className="testimonials-wrapper">
@@ -79,7 +81,7 @@ export function TestimonialCarousel() {
                   </div>
                   <p className="testimonial-content">"{comment.comment}"</p>
                   <p className="testimonial-date">
-                    {new Date(comment.createdAt).toLocaleDateString('es-ES', {
+                    {new Date(comment.createdAt).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'

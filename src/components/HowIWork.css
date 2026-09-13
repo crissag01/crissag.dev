@@ -1,0 +1,77 @@
+#how-i-work {
+  position: relative;
+  z-index: 10;
+  padding: 4rem 2rem;
+  background: transparent;
+  text-align: center;
+  backdrop-filter: blur(2px);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+#how-i-work h2 {
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.how-it-work-intro {
+  color: #c0c0d0;
+  font-size: 1.05rem;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.how-it-work-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.how-it-work-step {
+  background: rgba(26, 26, 46, 0.4);
+  border: 2px solid #2d2d44;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.how-it-work-step:hover {
+  border-color: #a78bfa;
+  transform: translateY(-4px);
+}
+
+.how-it-work-step h3 {
+  font-size: 1.05rem;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+.how-it-work-step p {
+  color: #b0b0c0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  #how-i-work {
+    padding: 2rem 1rem;
+  }
+
+  #how-i-work h2 {
+    font-size: 1.8rem;
+  }
+
+  .how-it-work-intro {
+    font-size: 0.95rem;
+  }
+}

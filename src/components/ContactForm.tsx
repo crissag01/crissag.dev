@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Toast } from './Toast'
+import { useLanguage } from '../i18n/LanguageContext'
 import './ContactForm.css'
 
 interface FormErrors {
@@ -11,13 +12,14 @@ interface FormErrors {
 
 interface Turnstile {
   ready?: (callback: () => void) => void
-  render?: (containerId: string, options: any) => string
+  render?: (containerId: string, options: Record<string, unknown>) => string
   remove?: (widgetId: string) => void
   reset?: (widgetId: string) => void
   getResponse?: (widgetId: string) => string
 }
 
 export function ContactForm() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -91,21 +93,22 @@ export function ContactForm() {
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
       case 'name':
-        if (!value.trim()) return 'El nombre es requerido'
-        if (value.length < 2) return 'El nombre debe tener al menos 2 caracteres'
-        if (value.length > 100) return 'El nombre no puede exceder 100 caracteres'
+        if (!value.trim()) return t('contactForm.errors.nameRequired')
+        if (value.length < 2) return t('contactForm.errors.nameMin')
+        if (value.length > 100) return t('contactForm.errors.nameMax')
         return undefined
 
-      case 'email':
-        if (!value.trim()) return 'El email es requerido'
+      case 'email': {
+        if (!value.trim()) return t('contactForm.errors.emailRequired')
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(value)) return 'Email inválido'
+        if (!emailRegex.test(value)) return t('contactForm.errors.emailInvalid')
         return undefined
+      }
 
       case 'message':
-        if (!value.trim()) return 'El mensaje es requerido'
-        if (value.length < 10) return 'El mensaje debe tener al menos 10 caracteres'
-        if (value.length > MAX_MESSAGE_LENGTH) return `El mensaje no puede exceder ${MAX_MESSAGE_LENGTH} caracteres`
+        if (!value.trim()) return t('contactForm.errors.messageRequired')
+        if (value.length < 10) return t('contactForm.errors.messageMin')
+        if (value.length > MAX_MESSAGE_LENGTH) return t('contactForm.errors.messageMax').replace('{max}', String(MAX_MESSAGE_LENGTH))
         return undefined
 
       default:
@@ -160,7 +163,7 @@ export function ContactForm() {
 
     if (!token) {
       setErrors({
-        form: 'Por favor completa la verificación de seguridad'
+        form: t('contactForm.verificationError')
       })
       return
     }
@@ -186,7 +189,7 @@ export function ContactForm() {
 
       if (data.success) {
         setToast({
-          message: '✓ Mensaje enviado correctamente. Te contactaremos pronto.',
+          message: t('contactForm.successToast'),
           type: 'success'
         })
         setFormData({ name: '', email: '', message: '' })
@@ -195,13 +198,13 @@ export function ContactForm() {
         }
       } else {
         setToast({
-          message: data.error || 'Error al enviar el mensaje. Intenta de nuevo.',
+          message: data.error || t('contactForm.genericError'),
           type: 'error'
         })
       }
-    } catch (error) {
+    } catch {
       setToast({
-        message: 'Error de conexión. Verifica tu internet e intenta de nuevo.',
+        message: t('contactForm.connectionError'),
         type: 'error'
       })
     } finally {
@@ -214,8 +217,8 @@ export function ContactForm() {
       <form ref={formRef} className="contact-form" onSubmit={handleSubmit} noValidate>
         <div className="form-group">
           <label htmlFor="name">
-            Nombre
-            <span className="required-indicator" aria-label="requerido">*</span>
+            {t('contactForm.nameLabel')}
+            <span className="required-indicator" aria-label="required">*</span>
           </label>
           <input
             type="text"
@@ -223,7 +226,7 @@ export function ContactForm() {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Tu nombre"
+            placeholder={t('contactForm.namePlaceholder')}
             aria-required="true"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
@@ -239,8 +242,8 @@ export function ContactForm() {
 
         <div className="form-group">
           <label htmlFor="email">
-            Email
-            <span className="required-indicator" aria-label="requerido">*</span>
+            {t('contactForm.emailLabel')}
+            <span className="required-indicator" aria-label="required">*</span>
           </label>
           <input
             type="email"
@@ -248,7 +251,7 @@ export function ContactForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="tu@email.com"
+            placeholder={t('contactForm.emailPlaceholder')}
             aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'email-error' : undefined}
@@ -263,15 +266,15 @@ export function ContactForm() {
 
         <div className="form-group">
           <label htmlFor="message">
-            Mensaje
-            <span className="required-indicator" aria-label="requerido">*</span>
+            {t('contactForm.messageLabel')}
+            <span className="required-indicator" aria-label="required">*</span>
           </label>
           <textarea
             id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
-            placeholder="Tu mensaje aquí..."
+            placeholder={t('contactForm.messagePlaceholder')}
             rows={5}
             aria-required="true"
             aria-invalid={!!errors.message}
@@ -317,10 +320,10 @@ export function ContactForm() {
           {isLoading ? (
             <>
               <span className="spinner"></span>
-              Enviando...
+              {t('contactForm.submitLoading')}
             </>
           ) : (
-            'Enviar Mensaje'
+            t('contactForm.submitIdle')
           )}
         </button>
       </form>

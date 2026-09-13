@@ -1,6 +1,10 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './Hero.css'
 
+const FREELANCER_PROFILE_URL = 'https://www.freelancer.mx/u/crisAgdev?frm=crisAgdev&sb=t'
+
 export function Hero() {
+  const { t } = useLanguage()
   const technologies = [
     'Python',
     'n8n',
@@ -64,14 +68,14 @@ export function Hero() {
                 <span className="verified-badge">✓</span>
               </div>
 
-              <p className="profile-title">Automation Developer | Business Process Automation | Python, n8n, APIs, JavaScript</p>
+              <p className="profile-title">{t('hero.title')}</p>
 
               <div className="profile-location">
-                📍 Monterrey, Nuevo León, Mexico
+                {t('hero.location')}
               </div>
 
               <div className="profile-description">
-                Especializado en automatización de procesos, integraciones API y desarrollo de soluciones personalizadas. Ayudo a empresas a optimizar sus operaciones con tecnología.
+                {t('hero.description')}
               </div>
 
               <div className="technologies-badges">
@@ -83,23 +87,20 @@ export function Hero() {
               </div>
 
               <div className="profile-stats">
-                <a href="#projects" className="stat-item">
-                  <span className="stat-number">6</span>
-                  <span className="stat-label">Proyectos</span>
-                </a>
-                <a href="#testimonials" className="stat-item">
-                  <span className="stat-number">5+</span>
-                  <span className="stat-label">Clientes</span>
+                <a href="#client-projects" className="stat-item">
+                  <span className="stat-number">2</span>
+                  <span className="stat-label">{t('hero.statClientProjects')}</span>
                 </a>
                 <a href="#contact" className="stat-item">
                   <span className="stat-number">∞</span>
-                  <span className="stat-label">Disponible</span>
+                  <span className="stat-label">{t('hero.statAvailable')}</span>
                 </a>
               </div>
 
               <div className="profile-actions">
-                <a href="#contact" className="btn-primary">Contactar</a>
-                <a href="#projects" className="btn-secondary">Ver Proyectos</a>
+                <a href="#contact" className="btn-primary">{t('hero.contactCta')}</a>
+                <a href="#client-projects" className="btn-secondary">{t('hero.projectsCta')}</a>
+                <a href={FREELANCER_PROFILE_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary">{t('hero.freelancerCta')}</a>
               </div>
             </div>
             </div>
@@ -107,7 +108,7 @@ export function Hero() {
 
           {/* Stack de Tecnologías */}
           <div className="stack-section">
-            <h3>Mi Stack</h3>
+            <h3>{t('hero.stackHeading')}</h3>
             <div className="stack-grid">
               {stack.map((tech) => (
                 <div key={tech.name} className="stack-icon" title={tech.name}>

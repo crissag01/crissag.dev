@@ -1,4 +1,5 @@
 import type { Project } from '../data/projects';
+import { useLanguage } from '../i18n/LanguageContext';
 import './ProjectModal.css';
 
 interface ProjectModalProps {
@@ -8,39 +9,43 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
+  const { t, language } = useLanguage();
+
   if (!isOpen || !project) return null;
+
+  const text = project.translations[language]
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        <img src={project.image} alt={project.title} className="modal-image" />
+        <img src={project.image} alt={text.title} className="modal-image" />
 
         <div className="modal-body">
           <div className="modal-header-content">
-            <h2>{project.title}</h2>
-            <div className="modal-price">Desde {project.price}</div>
+            <h2>{text.title}</h2>
+            <div className="modal-price">{text.price}</div>
           </div>
 
           <div className="modal-problem">
-            <h3>🎯 Problema que Resuelve</h3>
-            <p>{project.problem}</p>
+            <h3>{t(project.tier === 'client' ? 'projects.modal.problemLabel' : 'projects.modal.exploresLabel')}</h3>
+            <p>{text.problem}</p>
           </div>
 
-          <p className="modal-description">{project.fullDescription}</p>
+          <p className="modal-description">{text.fullDescription}</p>
 
           <div className="modal-use-cases">
-            <h3>💼 Casos de Uso</h3>
+            <h3>{t('projects.modal.useCasesLabel')}</h3>
             <ul>
-              {project.useCases.map((useCase) => (
+              {text.useCases.map((useCase) => (
                 <li key={useCase}>{useCase}</li>
               ))}
             </ul>
           </div>
 
           <div className="modal-technologies">
-            <h3>🛠️ Tecnologías</h3>
+            <h3>{t('projects.modal.technologiesLabel')}</h3>
             <div className="tech-list">
               {project.technologies.map((tech) => (
                 <span key={tech} className="tech-badge">
@@ -49,12 +54,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               ))}
             </div>
           </div>
-
-          {project.link && project.link !== '#' && (
-            <a href={project.link} target="_blank" rel="noopener noreferrer" className="modal-link">
-              Ver Proyecto →
-            </a>
-          )}
         </div>
       </div>
     </div>

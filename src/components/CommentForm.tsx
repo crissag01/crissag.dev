@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { projects } from '../data/projects'
 import { Toast } from './Toast'
+import { useLanguage } from '../i18n/LanguageContext'
+import { translations } from '../i18n/translations'
 import './CommentForm.css'
 
 interface CommentFormProps {
@@ -8,6 +10,7 @@ interface CommentFormProps {
 }
 
 export function CommentForm({ onCommentAdded }: CommentFormProps) {
+  const { t, language } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,17 +41,17 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.name.trim()) newErrors.name = 'El nombre es requerido'
-    else if (formData.name.length < 2) newErrors.name = 'Mínimo 2 caracteres'
+    if (!formData.name.trim()) newErrors.name = t('commentForm.errors.nameRequired')
+    else if (formData.name.length < 2) newErrors.name = t('commentForm.errors.nameMin')
 
-    if (!formData.email.trim()) newErrors.email = 'El email es requerido'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Email inválido'
+    if (!formData.email.trim()) newErrors.email = t('commentForm.errors.emailRequired')
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = t('commentForm.errors.emailInvalid')
 
-    if (!formData.projectId) newErrors.projectId = 'Selecciona un proyecto'
+    if (!formData.projectId) newErrors.projectId = t('commentForm.errors.projectRequired')
 
-    if (!formData.comment.trim()) newErrors.comment = 'El comentario es requerido'
-    else if (formData.comment.length < 10) newErrors.comment = 'Mínimo 10 caracteres'
-    else if (formData.comment.length > 1000) newErrors.comment = 'Máximo 1000 caracteres'
+    if (!formData.comment.trim()) newErrors.comment = t('commentForm.errors.commentRequired')
+    else if (formData.comment.length < 10) newErrors.comment = t('commentForm.errors.commentMin')
+    else if (formData.comment.length > 1000) newErrors.comment = t('commentForm.errors.commentMax')
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -80,7 +83,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
       if (data.success) {
         setToast({
-          message: '✓ Gracias por tu comentario. Será visible después de ser revisado.',
+          message: t('commentForm.successToast'),
           type: 'success'
         })
         setFormData({
@@ -93,13 +96,13 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
         onCommentAdded?.()
       } else {
         setToast({
-          message: data.error || 'Error al enviar el comentario',
+          message: data.error || t('commentForm.errorGeneric'),
           type: 'error'
         })
       }
-    } catch (error) {
+    } catch {
       setToast({
-        message: 'Error de conexión. Intenta de nuevo.',
+        message: t('commentForm.errorConnection'),
         type: 'error'
       })
     } finally {
@@ -110,12 +113,12 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
   return (
     <>
       <form className="comment-form" onSubmit={handleSubmit} noValidate>
-        <h3>Deja tu comentario</h3>
+        <h3>{t('commentForm.heading')}</h3>
 
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="name">
-              Nombre
+              {t('commentForm.nameLabel')}
               <span className="required-indicator">*</span>
             </label>
             <input
@@ -124,7 +127,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Tu nombre"
+              placeholder={t('commentForm.namePlaceholder')}
               aria-invalid={!!errors.name}
               disabled={isLoading}
               maxLength={100}
@@ -134,7 +137,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
           <div className="form-group">
             <label htmlFor="email">
-              Email
+              {t('commentForm.emailLabel')}
               <span className="required-indicator">*</span>
             </label>
             <input
@@ -143,7 +146,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="tu@email.com"
+              placeholder={t('commentForm.emailPlaceholder')}
               aria-invalid={!!errors.email}
               disabled={isLoading}
             />
@@ -153,7 +156,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
         <div className="form-group">
           <label htmlFor="projectId">
-            Sobre qué proyecto opinas
+            {t('commentForm.projectLabel')}
             <span className="required-indicator">*</span>
           </label>
           <select
@@ -164,10 +167,10 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             aria-invalid={!!errors.projectId}
             disabled={isLoading}
           >
-            <option value="">-- Selecciona un proyecto --</option>
+            <option value="">{t('commentForm.projectPlaceholder')}</option>
             {projects.map(project => (
               <option key={project.id} value={project.id}>
-                {project.title}
+                {project.translations[language].title}
               </option>
             ))}
           </select>
@@ -176,7 +179,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
         <div className="form-group">
           <label htmlFor="rating">
-            Calificación
+            {t('commentForm.ratingLabel')}
             <span className="required-indicator">*</span>
           </label>
           <div className="rating-input">
@@ -187,11 +190,14 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
               onChange={handleChange}
               disabled={isLoading}
             >
-              <option value={5}>⭐⭐⭐⭐⭐ Excelente (5)</option>
-              <option value={4}>⭐⭐⭐⭐ Muy Bueno (4)</option>
-              <option value={3}>⭐⭐⭐ Bueno (3)</option>
-              <option value={2}>⭐⭐ Regular (2)</option>
-              <option value={1}>⭐ Pobre (1)</option>
+              {translations.commentForm.ratingOptions[language].map((label, index) => {
+                const value = 5 - index
+                return (
+                  <option key={value} value={value}>
+                    {'⭐'.repeat(value)} {label}
+                  </option>
+                )
+              })}
             </select>
             <div className="star-display">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -208,7 +214,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
         <div className="form-group">
           <label htmlFor="comment">
-            Comentario
+            {t('commentForm.commentLabel')}
             <span className="required-indicator">*</span>
           </label>
           <textarea
@@ -216,7 +222,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
             name="comment"
             value={formData.comment}
             onChange={handleChange}
-            placeholder="Comparte tu experiencia..."
+            placeholder={t('commentForm.commentPlaceholder')}
             rows={4}
             aria-invalid={!!errors.comment}
             disabled={isLoading}
@@ -237,10 +243,10 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           {isLoading ? (
             <>
               <span className="spinner"></span>
-              Enviando...
+              {t('commentForm.submitLoading')}
             </>
           ) : (
-            'Enviar Comentario'
+            t('commentForm.submitIdle')
           )}
         </button>
       </form>

@@ -1,18 +1,26 @@
-#projects {
+.projects-section {
   padding: 4rem 2rem;
   background: transparent;
   text-align: center;
   animation: fadeInUp 0.8s ease-out;
 }
 
-#projects h2 {
+.projects-section h2 {
   font-size: 2.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
+}
+
+.projects-intro {
+  color: #9b9bb0;
+  font-size: 0.95rem;
+  max-width: 650px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
 }
 
 .carousel-container {
@@ -213,13 +221,13 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  #projects {
+  .projects-section {
     padding: 2rem 1rem;
   }
 
-  #projects h2 {
+  .projects-section h2 {
     font-size: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .carousel-container {

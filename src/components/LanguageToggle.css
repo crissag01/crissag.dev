@@ -1,0 +1,46 @@
+.language-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  background: rgba(15, 15, 30, 0.6);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.language-toggle button {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0.2rem 0.3rem;
+  transition: color 0.2s ease;
+}
+
+.language-toggle button.active {
+  color: #a78bfa;
+}
+
+.language-toggle button:hover {
+  color: #ffffff;
+}
+
+.language-toggle-divider {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .language-toggle {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
