@@ -119,7 +119,13 @@ Documentación completa: `Proyectos/n8n-flows-docs/`
 
 ## 📄 Licencia
 
-MIT License - Libre para usar y modificar
+**Todos los derechos reservados.**
+
+Este repositorio **no cuenta con ninguna licencia de código abierto**. La ausencia de una licencia no significa que el código sea de uso libre: por defecto, todos los derechos de autor sobre este código permanecen exclusivamente en manos del autor (Cristofer Aguilar).
+
+Esto significa que **no tienes permiso para usar, copiar, modificar, distribuir, clonar ni crear forks de este código**, total o parcialmente, sin autorización previa y por escrito del autor. Cualquier uso no autorizado constituye una infracción de derechos de autor y podrá dar lugar a las acciones legales correspondientes.
+
+Si te interesa licenciar o usar parte de este código, contáctame: crissag@proton.me
 
 ## 🎯 Roadmap
 
