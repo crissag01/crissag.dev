@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Toast } from './Toast'
 import { useLanguage } from '../i18n/LanguageContext'
+import { useTurnstile } from '../hooks/useTurnstile'
 import './ContactForm.css'
 
 interface FormErrors {
@@ -8,14 +9,6 @@ interface FormErrors {
   email?: string
   message?: string
   form?: string
-}
-
-interface Turnstile {
-  ready?: (callback: () => void) => void
-  render?: (containerId: string, options: Record<string, unknown>) => string
-  remove?: (widgetId: string) => void
-  reset?: (widgetId: string) => void
-  getResponse?: (widgetId: string) => string
 }
 
 export function ContactForm() {
@@ -29,73 +22,10 @@ export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [honeypot, setHoneypot] = useState('')
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
-  const turnstileWidgetId = useRef<string | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const MAX_MESSAGE_LENGTH = 5000
 
-  useEffect(() => {
-    let script: HTMLScriptElement | null = null
-
-    const loadTurnstile = () => {
-      if (script) return
-
-      script = document.createElement('script')
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-      // Un <script> creado con createElement es async=true por defecto
-      // (aunque no se ponga el atributo async en el markup). Turnstile
-      // exige que sea false antes de usar turnstile.ready() manualmente,
-      // o lanza un TurnstileError.
-      script.async = false
-      script.defer = false
-      document.head.appendChild(script)
-
-      script.onload = () => {
-        const turnstile = window.turnstile as Turnstile
-        if (turnstile?.ready) {
-          turnstile.ready(() => {
-            const siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITEKEY
-            if (siteKey && document.getElementById('turnstile-widget')) {
-              // render() takes a CSS selector, not a bare id — without the
-              // "#" it's parsed as a tag-name selector, which never matches
-              // and throws "Unable to find a container".
-              turnstileWidgetId.current = turnstile.render?.('#turnstile-widget', {
-                sitekey: siteKey,
-                theme: 'dark',
-                size: 'normal'
-              }) || null
-            }
-          })
-        }
-      }
-    }
-
-    // Carga Turnstile solo cuando el usuario se acerca al formulario, no al abrir la página.
-    // Evita que el navegador pida permiso de almacenamiento de terceros de inmediato.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadTurnstile()
-          observer.disconnect()
-        }
-      },
-      { rootMargin: '200px' }
-    )
-
-    if (formRef.current) {
-      observer.observe(formRef.current)
-    }
-
-    return () => {
-      observer.disconnect()
-      const turnstile = window.turnstile as Turnstile
-      if (turnstileWidgetId.current && turnstile?.remove) {
-        turnstile.remove(turnstileWidgetId.current)
-      }
-      if (script?.parentNode) {
-        script.parentNode.removeChild(script)
-      }
-    }
-  }, [])
+  const { getToken, reset: resetTurnstile } = useTurnstile('turnstile-widget', formRef)
 
   const validateField = (name: string, value: string): string | undefined => {
     switch (name) {
@@ -163,10 +93,7 @@ export function ContactForm() {
       return
     }
 
-    const turnstile = window.turnstile as Turnstile
-    const token = turnstileWidgetId.current
-      ? turnstile?.getResponse?.(turnstileWidgetId.current)
-      : undefined
+    const token = getToken()
 
     if (!token) {
       setErrors({
@@ -200,9 +127,7 @@ export function ContactForm() {
           type: 'success'
         })
         setFormData({ name: '', email: '', message: '' })
-        if (turnstileWidgetId.current && turnstile?.reset) {
-          turnstile.reset(turnstileWidgetId.current)
-        }
+        resetTurnstile()
       } else {
         setToast({
           message: data.error || t('contactForm.genericError'),
@@ -344,10 +269,4 @@ export function ContactForm() {
       )}
     </>
   )
-}
-
-declare global {
-  interface Window {
-    turnstile?: Turnstile
-  }
 }

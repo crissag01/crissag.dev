@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { projects } from '../data/projects'
 import { Toast } from './Toast'
 import { useLanguage } from '../i18n/LanguageContext'
 import { translations } from '../i18n/translations'
+import { useTurnstile } from '../hooks/useTurnstile'
 import './CommentForm.css'
 
 interface CommentFormProps {
@@ -21,6 +22,9 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const { getToken, reset: resetTurnstile } = useTurnstile('comment-turnstile-widget', formRef)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -62,6 +66,12 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
     if (!validateForm()) return
 
+    const token = getToken()
+    if (!token) {
+      setErrors(prev => ({ ...prev, form: t('commentForm.verificationError') }))
+      return
+    }
+
     setIsLoading(true)
 
     try {
@@ -75,7 +85,8 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           email: formData.email.trim(),
           projectId: formData.projectId,
           comment: formData.comment.trim(),
-          rating: formData.rating
+          rating: formData.rating,
+          turnstileToken: token
         })
       })
 
@@ -93,6 +104,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           comment: '',
           rating: 5
         })
+        resetTurnstile()
         onCommentAdded?.()
       } else {
         setToast({
@@ -112,7 +124,7 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
 
   return (
     <>
-      <form className="comment-form" onSubmit={handleSubmit} noValidate>
+      <form ref={formRef} className="comment-form" onSubmit={handleSubmit} noValidate>
         <h3>{t('commentForm.heading')}</h3>
 
         <div className="form-row">
@@ -233,6 +245,10 @@ export function CommentForm({ onCommentAdded }: CommentFormProps) {
           </div>
           {errors.comment && <span className="error-message">{errors.comment}</span>}
         </div>
+
+        <div id="comment-turnstile-widget" className="turnstile-container"></div>
+
+        {errors.form && <span className="error-message">{errors.form}</span>}
 
         <button
           type="submit"

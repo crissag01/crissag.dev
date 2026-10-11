@@ -151,6 +151,10 @@ export const translations = {
     },
     errorGeneric: { en: 'Error submitting comment', es: 'Error al enviar el comentario' },
     errorConnection: { en: 'Connection error. Please try again.', es: 'Error de conexión. Intenta de nuevo.' },
+    verificationError: {
+      en: 'Please complete the security check',
+      es: 'Por favor completa la verificación de seguridad'
+    },
     errors: {
       nameRequired: { en: 'Name is required', es: 'El nombre es requerido' },
       nameMin: { en: 'At least 2 characters', es: 'Mínimo 2 caracteres' },

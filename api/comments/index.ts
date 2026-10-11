@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { checkRateLimit } from '../_lib/requestLimiter.js'
+import { verifyCloudflareTurnstile } from '../_lib/turnstile.js'
 import { sanitizeInput, EMAIL_REGEX } from '../_lib/sanitize.js'
 import { transporter } from '../_lib/mailer.js'
 import { getApprovedComments, insertComment } from '../_lib/comments.js'
@@ -28,12 +29,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
-    const { name, email, projectId, comment, rating } = req.body ?? {}
+    const { name, email, projectId, comment, rating, turnstileToken } = req.body ?? {}
 
-    if (!name || !email || !projectId || !comment || !rating) {
+    if (!name || !email || !projectId || !comment || !rating || !turnstileToken) {
       return res.status(400).json({
         success: false,
         error: 'Faltan campos requeridos'
+      })
+    }
+
+    const isValidTurnstile = await verifyCloudflareTurnstile(turnstileToken)
+    if (!isValidTurnstile) {
+      return res.status(400).json({
+        success: false,
+        error: 'Verificación de seguridad fallida. Intenta de nuevo.'
       })
     }
 

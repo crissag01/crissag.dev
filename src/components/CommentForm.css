@@ -131,6 +131,24 @@
   margin-top: -0.4rem;
 }
 
+.turnstile-container {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.turnstile-container iframe {
+  max-width: 100% !important;
+}
+
+@media (max-width: 600px) {
+  .turnstile-container {
+    transform: scale(0.9);
+    transform-origin: center;
+    margin: -0.5rem 0;
+  }
+}
+
 .character-count {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
