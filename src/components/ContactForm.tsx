@@ -41,8 +41,12 @@ export function ContactForm() {
 
       script = document.createElement('script')
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-      // Sin async/defer: Turnstile exige que el script no tenga estos atributos
-      // cuando se usa turnstile.ready() manualmente, o lanza un TurnstileError.
+      // Un <script> creado con createElement es async=true por defecto
+      // (aunque no se ponga el atributo async en el markup). Turnstile
+      // exige que sea false antes de usar turnstile.ready() manualmente,
+      // o lanza un TurnstileError.
+      script.async = false
+      script.defer = false
       document.head.appendChild(script)
 
       script.onload = () => {
