@@ -31,7 +31,7 @@ export const projects: Project[] = [
         title: 'OpenClaw Configuration & Management',
         description: 'Configuration and management system for OpenClaw',
         fullDescription: 'A complete configuration solution for OpenClaw with an admin interface. Manages settings, users, permissions, and logs, with real-time validation and change synchronization.',
-        problem: 'OpenClaw platforms lacked an intuitive admin panel to manage configuration, users, and permissions from one place.',
+        problem: "Even with OpenClaw 2.0's improved WebUI, configuring it end-to-end — settings, users, permissions — is still confusing for teams without hands-on experience with the platform.",
         useCases: ['OpenClaw platform administrators', 'Managing multiple users and roles', 'Auditing and logging configuration changes'],
         price: 'From $2,500 setup + $100/mo'
       },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
         title: 'Configuraciones OpenClaw',
         description: 'Sistema de configuración y gestión para OpenClaw',
         fullDescription: 'Solución completa de configuración para OpenClaw con interfaz administrativa. Permite gestionar parámetros, usuarios, permisos y logs. Incluye validación en tiempo real y sincronización de cambios.',
-        problem: 'Plataformas OpenClaw carecen de panel administrativo intuitivo para gestionar configuraciones, usuarios y permisos de forma centralizada.',
+        problem: 'Aunque OpenClaw 2.0 mejoró su WebUI, configurarla de punta a punta —parámetros, usuarios, permisos— sigue siendo confuso para equipos sin experiencia práctica con la plataforma.',
         useCases: ['Administradores de plataformas OpenClaw', 'Gestión de múltiples usuarios y roles', 'Auditoría y logs de cambios en configuración'],
         price: 'Desde $2,500 de instalación + $100/mes'
       }
