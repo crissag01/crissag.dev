@@ -24,7 +24,7 @@ export const projects: Project[] = [
   {
     id: 3,
     tier: 'client',
-    image: '/projects/openclaw-ai.svg',
+    image: '/projects/Openclaw-banner.png',
     technologies: ['React', 'TypeScript', 'API Rest', 'Base de Datos'],
     translations: {
       en: {
@@ -48,7 +48,7 @@ export const projects: Project[] = [
   {
     id: 4,
     tier: 'client',
-    image: '/projects/invoice-whatsapp.svg',
+    image: '/projects/n8n-facturas-1.jpg',
     technologies: ['n8n', 'Telegram Bot', 'WhatsApp API', 'Google Sheets', 'JavaScript'],
     translations: {
       en: {
