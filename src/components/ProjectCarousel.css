@@ -126,17 +126,22 @@
 }
 
 .expanded-content {
-  max-height: 0;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
-  transition: all 0.4s ease;
+  transition: grid-template-rows 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
   margin-top: 0;
 }
 
 .expanded-content.show {
-  max-height: 500px;
+  grid-template-rows: 1fr;
   opacity: 1;
   margin-top: 1rem;
+}
+
+.expanded-content-inner {
+  overflow: hidden;
+  min-height: 0;
 }
 
 .problem {
@@ -233,9 +238,5 @@
   .carousel-container {
     grid-template-columns: 1fr;
     gap: 1.5rem;
-  }
-
-  .expanded-content.show {
-    max-height: 600px;
   }
 }

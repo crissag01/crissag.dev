@@ -47,21 +47,23 @@ export function ProjectCarousel({ projects, headingKey, introKey, sectionId }: P
                   <p className="price-tag">{text.price}</p>
 
                   <div className={`expanded-content ${hoveredId === project.id ? 'show' : ''}`}>
-                    <p className="problem"><strong>{t(project.tier === 'client' ? 'projects.modal.problemLabel' : 'projects.modal.exploresLabel')}:</strong> {text.problem}</p>
-                    <p className="full-description">{text.fullDescription}</p>
-                    <div className="technologies">
-                      {project.technologies.map((tech) => (
-                        <span key={tech} className="tech-tag">
-                          {tech}
-                        </span>
-                      ))}
+                    <div className="expanded-content-inner">
+                      <p className="problem"><strong>{t(project.tier === 'client' ? 'projects.modal.problemLabel' : 'projects.modal.exploresLabel')}:</strong> {text.problem}</p>
+                      <p className="full-description">{text.fullDescription}</p>
+                      <div className="technologies">
+                        {project.technologies.map((tech) => (
+                          <span key={tech} className="tech-tag">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      <button
+                        className="project-link"
+                        onClick={() => setSelectedProject(project)}
+                      >
+                        {t('projects.viewDetails')}
+                      </button>
                     </div>
-                    <button
-                      className="project-link"
-                      onClick={() => setSelectedProject(project)}
-                    >
-                      {t('projects.viewDetails')}
-                    </button>
                   </div>
                 </div>
               </div>
