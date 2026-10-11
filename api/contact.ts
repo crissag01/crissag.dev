@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { checkRateLimit } from './_lib/ratelimit'
-import { verifyCloudflareTurnstile } from './_lib/turnstile'
-import { sanitizeInput, EMAIL_REGEX } from './_lib/sanitize'
-import { transporter } from './_lib/mailer'
+import { checkRateLimit } from './_lib/requestLimiter.js'
+import { verifyCloudflareTurnstile } from './_lib/turnstile.js'
+import { sanitizeInput, EMAIL_REGEX } from './_lib/sanitize.js'
+import { transporter } from './_lib/mailer.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

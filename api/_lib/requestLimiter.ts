@@ -1,5 +1,5 @@
 import type { VercelRequest } from '@vercel/node'
-import { getSupabase } from './supabase'
+import { getSupabase } from './supabase.js'
 
 const WINDOW_MINUTES = 15
 const MAX_REQUESTS = 5

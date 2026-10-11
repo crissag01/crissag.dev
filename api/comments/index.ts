@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { checkRateLimit } from '../_lib/ratelimit'
-import { sanitizeInput, EMAIL_REGEX } from '../_lib/sanitize'
-import { transporter } from '../_lib/mailer'
-import { getApprovedComments, insertComment } from '../_lib/comments'
+import { checkRateLimit } from '../_lib/requestLimiter.js'
+import { sanitizeInput, EMAIL_REGEX } from '../_lib/sanitize.js'
+import { transporter } from '../_lib/mailer.js'
+import { getApprovedComments, insertComment } from '../_lib/comments.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {

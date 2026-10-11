@@ -11,7 +11,7 @@ export async function verifyCloudflareTurnstile(token: string): Promise<boolean>
       })
     })
 
-    const data = await response.json()
+    const data = await response.json() as { success: boolean; score?: number }
     return data.success && (data.score === undefined || data.score > 0.5)
   } catch (error) {
     console.error('Error verifying Turnstile token:', error)
