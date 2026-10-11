@@ -72,7 +72,7 @@ export const projects: Project[] = [
   {
     id: 1,
     tier: 'practice',
-    image: '/projects/cloud-devops.svg',
+    image: '/projects/Assist-Card-Automation.png',
     technologies: ['n8n', 'JavaScript', 'APIs', 'Webhooks', 'Automatización'],
     translations: {
       en: {
@@ -96,7 +96,7 @@ export const projects: Project[] = [
   {
     id: 2,
     tier: 'practice',
-    image: '/projects/nas-server.svg',
+    image: '/projects/nas-local-1.jpg',
     technologies: ['JavaScript', 'HTML/CSS', 'Node.js', 'npm'],
     translations: {
       en: {
