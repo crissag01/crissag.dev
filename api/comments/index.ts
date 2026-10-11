@@ -2,13 +2,12 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { checkRateLimit } from '../_lib/ratelimit'
 import { sanitizeInput, EMAIL_REGEX } from '../_lib/sanitize'
 import { transporter } from '../_lib/mailer'
-import { loadComments, saveComments, type Comment } from '../_lib/comments'
+import { getApprovedComments, insertComment } from '../_lib/comments'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     try {
-      const comments = await loadComments()
-      const approvedComments = comments.filter(c => c.approved).slice(0, 50)
+      const approvedComments = await getApprovedComments()
       return res.json({ success: true, comments: approvedComments })
     } catch (error) {
       console.error('Error fetching comments:', error)
@@ -58,20 +57,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ success: false, error: 'Calificación inválida' })
     }
 
-    const newComment: Comment = {
+    const newComment = await insertComment({
       id: Date.now().toString(),
       name: sanitizedName,
       email: sanitizedEmail,
       projectId: sanitizeInput(projectId),
       comment: sanitizedComment,
       rating: parseInt(rating),
-      createdAt: new Date().toISOString(),
       approved: false
-    }
-
-    const comments = await loadComments()
-    comments.unshift(newComment)
-    await saveComments(comments)
+    })
 
     try {
       await transporter.sendMail({

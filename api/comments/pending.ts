@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { requireAdmin } from '../_lib/adminAuth'
-import { loadComments } from '../_lib/comments'
+import { getPendingComments } from '../_lib/comments'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -9,7 +9,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!requireAdmin(req, res)) return
 
-  const comments = await loadComments()
-  const pending = comments.filter(c => !c.approved)
+  const pending = await getPendingComments()
   res.json({ success: true, comments: pending })
 }

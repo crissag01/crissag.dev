@@ -43,3 +43,9 @@ tmp/
 # Package manager
 package-lock.json
 yarn.lock
+.env*
+
+# Agent tooling (Vercel CLI skill installs, editor/session config)
+.agents/
+.claude/
+skills-lock.json
