@@ -55,7 +55,10 @@ export function ContactForm() {
           turnstile.ready(() => {
             const siteKey = import.meta.env.VITE_CLOUDFLARE_TURNSTILE_SITEKEY
             if (siteKey && document.getElementById('turnstile-widget')) {
-              turnstileWidgetId.current = turnstile.render?.('turnstile-widget', {
+              // render() takes a CSS selector, not a bare id — without the
+              // "#" it's parsed as a tag-name selector, which never matches
+              // and throws "Unable to find a container".
+              turnstileWidgetId.current = turnstile.render?.('#turnstile-widget', {
                 sitekey: siteKey,
                 theme: 'dark',
                 size: 'normal'
