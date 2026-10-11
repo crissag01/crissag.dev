@@ -96,7 +96,7 @@ export const projects: Project[] = [
   {
     id: 2,
     tier: 'practice',
-    image: '/projects/nas-local-1.jpg',
+    image: '/projects/Nas-3.jpeg',
     technologies: ['JavaScript', 'HTML/CSS', 'Node.js', 'npm'],
     translations: {
       en: {
