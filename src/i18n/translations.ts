@@ -115,7 +115,8 @@ export const translations = {
       problemLabel: { en: '🎯 Problem It Solves', es: '🎯 Problema que Resuelve' },
       exploresLabel: { en: '🎯 What It Explores', es: '🎯 Qué Explora' },
       useCasesLabel: { en: '💼 Use Cases', es: '💼 Casos de Uso' },
-      technologiesLabel: { en: '🛠️ Technologies', es: '🛠️ Tecnologías' }
+      technologiesLabel: { en: '🛠️ Technologies', es: '🛠️ Tecnologías' },
+      viewOnGithub: { en: 'View on GitHub', es: 'Ver en GitHub' }
     } satisfies Record<string, Localized>
   },
 

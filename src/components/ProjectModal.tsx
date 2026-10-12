@@ -54,6 +54,17 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               ))}
             </div>
           </div>
+
+          {project.repoUrl && (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="modal-link"
+            >
+              {t('projects.modal.viewOnGithub')} →
+            </a>
+          )}
         </div>
       </div>
     </div>

@@ -14,6 +14,7 @@ export interface Project {
   tier: ProjectTier
   image: string
   technologies: string[]
+  repoUrl?: string
   translations: {
     en: ProjectText
     es: ProjectText
@@ -50,6 +51,7 @@ export const projects: Project[] = [
     tier: 'client',
     image: '/projects/n8n-facturas-1.jpg',
     technologies: ['n8n', 'Telegram Bot', 'WhatsApp API', 'Google Sheets', 'JavaScript'],
+    repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/Flujos%20n8n',
     translations: {
       en: {
         title: 'Invoice Automation',
@@ -74,6 +76,7 @@ export const projects: Project[] = [
     tier: 'practice',
     image: '/projects/Assist-Card-Automation.png',
     technologies: ['n8n', 'JavaScript', 'APIs', 'Webhooks', 'Automatización'],
+    repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/Flujos%20n8n',
     translations: {
       en: {
         title: 'ASSIST CARD — Quote Automation (practice build)',
@@ -98,6 +101,7 @@ export const projects: Project[] = [
     tier: 'practice',
     image: '/projects/Nas-3.jpeg',
     technologies: ['JavaScript', 'HTML/CSS', 'Node.js', 'npm'],
+    repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/NAS-Local',
     translations: {
       en: {
         title: 'Local NAS with File Upload (practice build)',
@@ -122,6 +126,7 @@ export const projects: Project[] = [
     tier: 'practice',
     image: '/projects/python-apps.svg',
     technologies: ['Python', 'Pandas', 'Matplotlib', 'CLI'],
+    repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/Organizador%20de%20Finanzas%20Python',
     translations: {
       en: {
         title: 'Personal Finance Organizer (practice build)',
@@ -146,6 +151,7 @@ export const projects: Project[] = [
     tier: 'practice',
     image: '/projects/automation-tools.svg',
     technologies: ['JavaScript', 'WebGL', 'HTML5', 'CSS3'],
+    repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/Wallpaper%20Engine',
     translations: {
       en: {
         title: 'Wallpaper Engine Automations (hobby build)',
