@@ -1,54 +1,53 @@
-# crissag.dev - Portafolio Profesional
+# crissag.dev — Portafolio Profesional
 
-Portafolio personal de Cristofer Aguilar mostrando proyectos, automatizaciones y experiencia en desarrollo de software.
+Portafolio de Cristofer Aguilar: proyectos, automatizaciones y experiencia en desarrollo de software. Sitio bilingüe (inglés/español) desplegado en Vercel.
 
 ## 🎨 Características
 
 - **Diseño Moderno:** Interfaz minimalista con tema púrpura y negro
-- **Animaciones Suaves:** Canvas dinámico y transiciones optimizadas
+- **Bilingüe:** Inglés por defecto, con toggle a español
 - **Responsive Design:** Funciona perfectamente en mobile y desktop
-- **Performance Optimizado:** Carga rápida y eficiente
+- **Panel de Admin:** Moderación de comentarios en `/admin`
 - **SEO Ready:** Meta tags y estructura semántica
 
 ## 🏗️ Estructura del Proyecto
 
 ```
 ├── src/
-│   ├── components/        # Componentes React reutilizables
-│   ├── data/             # Data estática (proyectos, etc)
-│   ├── App.tsx           # Componente principal
-│   ├── main.tsx          # Entry point
-│   └── index.css         # Estilos globales
-├── public/               # Assets estáticos (imágenes, iconos)
-├── Proyectos/           
-│   ├── Flujos n8n/       # Automatizaciones en n8n
-│   └── n8n-flows-docs/   # Documentación de flujos
-├── dist/                # Build output
-├── vite.config.ts       # Configuración de Vite
-├── tsconfig.json        # Configuración de TypeScript
-└── package.json         # Dependencias del proyecto
-
+│   ├── components/        # Componentes React del sitio público
+│   ├── data/               # Data estática (proyectos, etc)
+│   ├── hooks/               # Hooks compartidos (ej. useTurnstile)
+│   ├── i18n/                 # Traducciones y contexto de idioma
+│   ├── admin/               # App del panel de moderación (/admin)
+│   ├── App.tsx              # Componente principal del sitio público
+│   └── main.tsx            # Entry point del sitio público
+├── admin/
+│   └── index.html          # Entry point de Vite para /admin
+├── api/                     # Funciones serverless (Vercel)
+│   ├── _lib/                 # Lógica compartida (Supabase, mailer, etc)
+│   ├── contact.ts            # POST /api/contact
+│   └── comments/             # GET/POST /api/comments + moderación
+├── supabase/
+│   └── migrations/          # Esquema SQL de la base de datos
+├── public/                  # Assets estáticos (imágenes, iconos)
+├── vite.config.ts           # Configuración de Vite (multi-entry)
+└── package.json             # Dependencias del proyecto
 ```
+
+Las automatizaciones de n8n y otros proyectos de práctica que aparecen en el portafolio viven en la rama [`Proyectos`](https://github.com/crissag01/crissag.dev/tree/Proyectos) de este mismo repositorio, separados de `main` para mantener el repo del sitio enfocado solo en el código del sitio.
 
 ## 🚀 Stack Tecnológico
 
 **Frontend:**
-- React 19.2.6
-- TypeScript 6.0
-- Vite 8.0 (bundler)
+- React 19 + TypeScript
+- Vite (bundler, multi-entry para sitio público + admin)
 - CSS3 (sin frameworks)
-- Canvas API (animaciones)
 
-**Automatizaciones:**
-- n8n (orquestación de workflows)
-- Google Sheets / Gmail (integración)
-- Telegram & WhatsApp APIs
-- Webhooks personalizados
-
-**DevOps:**
-- Node.js 20.19+
-- npm (package manager)
-- Git
+**Backend:**
+- Funciones serverless en Vercel (Node.js)
+- Supabase (Postgres) para comentarios y rate limiting
+- Nodemailer (SMTP) para notificaciones por correo
+- Cloudflare Turnstile como protección anti-bot
 
 ## 📁 Guía de Componentes
 
@@ -61,55 +60,24 @@ Sección principal con nombre, título y stack de tecnologías.
 ### AboutMe
 Sección "Sobre Mí" con descripción profesional.
 
+### HowIWork
+Explica el proceso de trabajo en pasos.
+
 ### ProjectCarousel
-Carrusel interactivo de proyectos con hover effects.
+Carrusel interactivo de proyectos (trabajo de cliente y proyectos de práctica por separado), con hover effects.
 
 ### ProjectModal
 Modal para ver detalles completos de cada proyecto.
 
-### TestimonialCarousel
-Carrusel de testimonios y comentarios.
-
-## 🤖 Automatizaciones (n8n)
-
-Disponibles en `Proyectos/Flujos n8n/`:
-
-- **ASSIST CARD:** Sistema de cotizaciones automático
-- **Facturas:** Distribución por Telegram y WhatsApp
-- **Bitácora:** Registro de eventos en tiempo real
-- **Organizador de Métricas:** Centralización de datos
-
-Documentación completa: `Proyectos/n8n-flows-docs/`
-
-## 📊 Performance
-
-- Lighthouse Score: 95+
-- TTL (Time to Load): < 2s
-- LCP (Largest Contentful Paint): < 1.5s
-- FID (First Input Delay): < 100ms
-- CLS (Cumulative Layout Shift): < 0.1
+### TestimonialCarousel / CommentForm
+Comentarios de visitantes, moderados antes de publicarse.
 
 ## 🔐 Seguridad
 
-### Prácticas
-- ✅ No se almacenan credenciales en el código
-- ✅ Variables de entorno en `.env.local`
-- ✅ HTTPS solo en producción
-- ✅ Headers de seguridad configurados
-- ✅ CSP (Content Security Policy) activo
-
-### Políticas de GitHub
-- 🔒 **Security Policy** - Disabled (Reportar vulnerabilidades: crissag@proton.me)
-- 🔒 **Dependabot Alerts** - Disabled (Monitoreo de dependencias)
-- 🔒 **Code Scanning** - Disabled (Advanced Security para Organizaciones)
-
-## 📝 Convenciones de Código
-
-- **Componentes:** PascalCase (ej: `Hero.tsx`)
-- **Archivos de estilo:** kebab-case (ej: `hero.css`)
-- **Variables:** camelCase
-- **Constantes:** UPPER_SNAKE_CASE
-- **TypeScript:** Tipos explícitos siempre
+- ✅ No se almacenan credenciales en el código — todo vía variables de entorno en Vercel
+- ✅ Turnstile + rate limiting en los formularios públicos (contacto y comentarios)
+- ✅ Comentarios moderados antes de publicarse (`/admin`, protegido por token)
+- ✅ RLS activado en las tablas de Supabase — solo accesibles server-side
 
 ## 📞 Contacto
 
@@ -127,19 +95,6 @@ Esto significa que **no tienes permiso para usar, copiar, modificar, distribuir,
 
 Si te interesa licenciar o usar parte de este código, contáctame: crissag@proton.me
 
-## 🎯 Roadmap
-
-- [ ] Agregar más proyectos al portafolio
-- [ ] Implementar blog con artículos
-- [ ] Integrar formulario de contacto
-- [ ] Dashboard de analytics
-- [ ] Modo oscuro/claro selector
-- [ ] Traducción a múltiples idiomas
-
 ---
 
-**Última actualización:** Junio 2026
-**Versión:** 1.0.0
 **Autor:** Cristofer Aguilar
-
-# Portafolio
