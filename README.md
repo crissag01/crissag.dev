@@ -1,145 +1,46 @@
-# crissag.dev - Portafolio Profesional
+# Proyectos
 
-Portafolio personal de Cristofer Aguilar mostrando proyectos, automatizaciones y experiencia en desarrollo de software.
+Rama dedicada únicamente al código fuente y documentación de los proyectos de práctica que aparecen referenciados en el portafolio ([crissag.dev](https://crissag.dev), rama `main`). No contiene el sitio web — solo el material de origen de cada proyecto.
 
-## 🎨 Características
-
-- **Diseño Moderno:** Interfaz minimalista con tema púrpura y negro
-- **Animaciones Suaves:** Canvas dinámico y transiciones optimizadas
-- **Responsive Design:** Funciona perfectamente en mobile y desktop
-- **Performance Optimizado:** Carga rápida y eficiente
-- **SEO Ready:** Meta tags y estructura semántica
-
-## 🏗️ Estructura del Proyecto
+## Estructura
 
 ```
-├── src/
-│   ├── components/        # Componentes React reutilizables
-│   ├── data/             # Data estática (proyectos, etc)
-│   ├── App.tsx           # Componente principal
-│   ├── main.tsx          # Entry point
-│   └── index.css         # Estilos globales
-├── public/               # Assets estáticos (imágenes, iconos)
-├── Proyectos/           
-│   ├── Flujos n8n/       # Automatizaciones en n8n
-│   └── n8n-flows-docs/   # Documentación de flujos
-├── dist/                # Build output
-├── vite.config.ts       # Configuración de Vite
-├── tsconfig.json        # Configuración de TypeScript
-└── package.json         # Dependencias del proyecto
-
+Proyectos/
+├── Flujos n8n/              # Workflows de n8n exportados (.json)
+├── n8n-flows-docs/          # Documentación de cada workflow de n8n
+├── NAS-Local/                # Servidor NAS casero (Node.js/Express + frontend)
+├── Organizador de Finanzas Python/   # App de finanzas personales (Python + frontend)
+├── Wallpaper Engine/         # Scripts de automatización para Wallpaper Engine
+└── *.md                      # Material comercial (propuestas, checklists, presupuestos)
 ```
 
-## 🚀 Stack Tecnológico
+### `Flujos n8n/` + `n8n-flows-docs/`
 
-**Frontend:**
-- React 19.2.6
-- TypeScript 6.0
-- Vite 8.0 (bundler)
-- CSS3 (sin frameworks)
-- Canvas API (animaciones)
+Workflows de n8n listos para importar, con su documentación de setup:
 
-**Automatizaciones:**
-- n8n (orquestación de workflows)
-- Google Sheets / Gmail (integración)
-- Telegram & WhatsApp APIs
-- Webhooks personalizados
+- **ASSIST CARD** — automatización de cotizaciones (`ASSISTCARD 1 (Recepcion) v2*.json`)
+- **Facturas** — distribución por Telegram y WhatsApp (`Facturas (Telegram|Whatsapp)*.json`)
+- **Bitácora (WhatsApp)** — registro de eventos (`Bitacora (Whatsapp).json`)
+- **Organizador de Métricas** — centralización de datos (`Organizador de metricas y respuestas*.json`)
 
-**DevOps:**
-- Node.js 20.19+
-- npm (package manager)
-- Git
+Docs de cada uno (setup, mejores prácticas) en `n8n-flows-docs/`.
 
-## 📁 Guía de Componentes
+### `NAS-Local/`
 
-### DynamicBackground
-Fondo animado con partículas conectadas. Optimizado para rendimiento.
+Servidor NAS personal con interfaz web (upload, gestión de archivos, breadcrumbs). Backend en Node.js/Express (`backend/`), frontend en React/TypeScript (`frontend/`). Ver `NAS-Local/README.md` para instalación.
 
-### Hero
-Sección principal con nombre, título y stack de tecnologías.
+### `Organizador de Finanzas Python/`
 
-### AboutMe
-Sección "Sobre Mí" con descripción profesional.
+App de finanzas personales (ingresos, gastos, tarjetas, comprobantes). Backend en Python (`backend/`), frontend estático (`frontend/`). Ver `Organizador de Finanzas Python/README.md` para instalación.
 
-### ProjectCarousel
-Carrusel interactivo de proyectos con hover effects.
+### `Wallpaper Engine/`
 
-### ProjectModal
-Modal para ver detalles completos de cada proyecto.
+Scripts de automatización e interactividad para Wallpaper Engine (`wallpaper.py`, `start.bat`).
 
-### TestimonialCarousel
-Carrusel de testimonios y comentarios.
+### Archivos sueltos
 
-## 🤖 Automatizaciones (n8n)
-
-Disponibles en `Proyectos/Flujos n8n/`:
-
-- **ASSIST CARD:** Sistema de cotizaciones automático
-- **Facturas:** Distribución por Telegram y WhatsApp
-- **Bitácora:** Registro de eventos en tiempo real
-- **Organizador de Métricas:** Centralización de datos
-
-Documentación completa: `Proyectos/n8n-flows-docs/`
-
-## 📊 Performance
-
-- Lighthouse Score: 95+
-- TTL (Time to Load): < 2s
-- LCP (Largest Contentful Paint): < 1.5s
-- FID (First Input Delay): < 100ms
-- CLS (Cumulative Layout Shift): < 0.1
-
-## 🔐 Seguridad
-
-### Prácticas
-- ✅ No se almacenan credenciales en el código
-- ✅ Variables de entorno en `.env.local`
-- ✅ HTTPS solo en producción
-- ✅ Headers de seguridad configurados
-- ✅ CSP (Content Security Policy) activo
-
-### Políticas de GitHub
-- 🔒 **Security Policy** - Disabled (Reportar vulnerabilidades: crissag@proton.me)
-- 🔒 **Dependabot Alerts** - Disabled (Monitoreo de dependencias)
-- 🔒 **Code Scanning** - Disabled (Advanced Security para Organizaciones)
-
-## 📝 Convenciones de Código
-
-- **Componentes:** PascalCase (ej: `Hero.tsx`)
-- **Archivos de estilo:** kebab-case (ej: `hero.css`)
-- **Variables:** camelCase
-- **Constantes:** UPPER_SNAKE_CASE
-- **TypeScript:** Tipos explícitos siempre
-
-## 📞 Contacto
-
-- **Email:** crissag@proton.me
-- **GitHub:** [crissag01](https://github.com/crissag01)
-- **LinkedIn:** [Cristofer Aguilar](https://www.linkedin.com/in/cristofer-aguilar-249694382/)
-
-## 📄 Licencia
-
-**Todos los derechos reservados.**
-
-Este repositorio **no cuenta con ninguna licencia de código abierto**. La ausencia de una licencia no significa que el código sea de uso libre: por defecto, todos los derechos de autor sobre este código permanecen exclusivamente en manos del autor (Cristofer Aguilar).
-
-Esto significa que **no tienes permiso para usar, copiar, modificar, distribuir, clonar ni crear forks de este código**, total o parcialmente, sin autorización previa y por escrito del autor. Cualquier uso no autorizado constituye una infracción de derechos de autor y podrá dar lugar a las acciones legales correspondientes.
-
-Si te interesa licenciar o usar parte de este código, contáctame: crissag@proton.me
-
-## 🎯 Roadmap
-
-- [ ] Agregar más proyectos al portafolio
-- [ ] Implementar blog con artículos
-- [ ] Integrar formulario de contacto
-- [ ] Dashboard de analytics
-- [ ] Modo oscuro/claro selector
-- [ ] Traducción a múltiples idiomas
+Material comercial/de ventas usado para los proyectos de cliente (presupuestos, checklist de llamadas de discovery, templates de propuesta) — no son código.
 
 ---
 
-**Última actualización:** Junio 2026
-**Versión:** 1.0.0
 **Autor:** Cristofer Aguilar
-
-# Portafolio
