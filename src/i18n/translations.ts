@@ -108,6 +108,7 @@ export const translations = {
       en: 'Personal and practice projects — not paid client work, but they show the same skills in action.',
       es: 'Proyectos personales y de práctica — no son trabajo pagado de un cliente, pero muestran las mismas habilidades en acción.'
     },
+    quote: { en: 'Custom quote based on your case', es: 'Cotización según tu caso' },
     viewDetails: { en: 'View Details →', es: 'Ver Detalles →' },
     modal: {
       problemLabel: { en: '🎯 Problem It Solves', es: '🎯 Problema que Resuelve' },

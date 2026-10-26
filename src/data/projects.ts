@@ -6,7 +6,6 @@ interface ProjectText {
   fullDescription: string
   problem: string
   useCases: string[]
-  price?: string
 }
 
 export interface Project {
@@ -33,16 +32,14 @@ export const projects: Project[] = [
         description: 'Configuration and management system for OpenClaw',
         fullDescription: 'A complete configuration solution for OpenClaw with an admin interface. Manages settings, users, permissions, and logs, with real-time validation and change synchronization.',
         problem: "Even with OpenClaw 2.0's improved WebUI, configuring it end-to-end — settings, users, permissions — is still confusing for teams without hands-on experience with the platform.",
-        useCases: ['OpenClaw platform administrators', 'Managing multiple users and roles', 'Auditing and logging configuration changes'],
-        price: 'From $2,500 USD setup + $100 USD/mo'
+        useCases: ['OpenClaw platform administrators', 'Managing multiple users and roles', 'Auditing and logging configuration changes']
       },
       es: {
         title: 'Configuraciones OpenClaw',
         description: 'Sistema de configuración y gestión para OpenClaw',
         fullDescription: 'Solución completa de configuración para OpenClaw con interfaz administrativa. Permite gestionar parámetros, usuarios, permisos y logs. Incluye validación en tiempo real y sincronización de cambios.',
         problem: 'Aunque OpenClaw 2.0 mejoró su WebUI, configurarla de punta a punta —parámetros, usuarios, permisos— sigue siendo confuso para equipos sin experiencia práctica con la plataforma.',
-        useCases: ['Administradores de plataformas OpenClaw', 'Gestión de múltiples usuarios y roles', 'Auditoría y logs de cambios en configuración'],
-        price: 'Desde $2,500 USD de instalación + $100 USD/mes'
+        useCases: ['Administradores de plataformas OpenClaw', 'Gestión de múltiples usuarios y roles', 'Auditoría y logs de cambios en configuración']
       }
     }
   },
@@ -58,16 +55,14 @@ export const projects: Project[] = [
         description: 'n8n workflows that read invoices sent over Telegram/WhatsApp and log them to Google Sheets',
         fullDescription: 'n8n workflows where the sender just forwards an invoice (PDF or photo) over Telegram or WhatsApp. The file is read with OCR, an OpenAI model extracts the fields into structured data, the row is appended to Google Sheets, and the sender gets an instant confirmation.',
         problem: 'Invoices arrived as files in chat and were typed into spreadsheets by hand — slow, error-prone, and with no confirmation that anything was received.',
-        useCases: ['Teams that receive invoices or receipts over chat', 'Bookkeeping that needs data in a spreadsheet, not in screenshots', 'Instant receipt confirmation to the sender'],
-        price: 'From $3,500 USD setup + $150 USD/mo'
+        useCases: ['Teams that receive invoices or receipts over chat', 'Bookkeeping that needs data in a spreadsheet, not in screenshots', 'Instant receipt confirmation to the sender']
       },
       es: {
         title: 'Automatización de Captura de Facturas',
         description: 'Flujos de n8n que leen facturas enviadas por Telegram/WhatsApp y las registran en Google Sheets',
         fullDescription: 'Flujos de n8n donde quien envía solo manda la factura (PDF o foto) por Telegram o WhatsApp. El archivo se lee con OCR, un modelo de OpenAI extrae los campos en datos estructurados, la fila se agrega a Google Sheets y el remitente recibe confirmación al instante.',
         problem: 'Las facturas llegaban como archivos por chat y se capturaban a mano en hojas de cálculo: lento, con errores y sin confirmación de recibido.',
-        useCases: ['Equipos que reciben facturas o recibos por chat', 'Contabilidad que necesita datos en una hoja, no en capturas', 'Confirmación inmediata de recibido al remitente'],
-        price: 'Desde $3,500 USD de instalación + $150 USD/mes'
+        useCases: ['Equipos que reciben facturas o recibos por chat', 'Contabilidad que necesita datos en una hoja, no en capturas', 'Confirmación inmediata de recibido al remitente']
       }
     }
   },
