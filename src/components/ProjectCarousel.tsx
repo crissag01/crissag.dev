@@ -44,7 +44,7 @@ export function ProjectCarousel({ projects, headingKey, introKey, sectionId }: P
                 <div className="project-content">
                   <h3>{text.title}</h3>
                   <p className="short-description">{text.description}</p>
-                  <p className="price-tag">{text.price}</p>
+                  {text.price && <p className="price-tag">{text.price}</p>}
 
                   <div className={`expanded-content ${hoveredId === project.id ? 'show' : ''}`}>
                     <div className="expanded-content-inner">

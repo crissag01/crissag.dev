@@ -15,10 +15,11 @@ const STORAGE_KEY = 'crissag-dev-language'
 function readStoredLanguage(): Language {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    return stored === 'es' ? 'es' : 'en'
+    if (stored === 'es' || stored === 'en') return stored
   } catch {
-    return 'en'
+    // ignore storage failures
   }
+  return navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en'
 }
 
 function resolvePath(path: string): unknown {

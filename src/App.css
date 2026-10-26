@@ -65,3 +65,20 @@ footer {
     font-size: 0.8rem;
   }
 }
+
+#cta-band {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+#cta-band p {
+  margin: 0.75rem 0 1.5rem;
+  opacity: 0.85;
+}
+
+.contact-alt {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}

@@ -86,17 +86,6 @@ export function Hero() {
                 ))}
               </div>
 
-              <div className="profile-stats">
-                <a href="#client-projects" className="stat-item">
-                  <span className="stat-number">2</span>
-                  <span className="stat-label">{t('hero.statClientProjects')}</span>
-                </a>
-                <a href="#contact" className="stat-item">
-                  <span className="stat-number">∞</span>
-                  <span className="stat-label">{t('hero.statAvailable')}</span>
-                </a>
-              </div>
-
               <div className="profile-actions">
                 <a href="#contact" className="btn-primary">{t('hero.contactCta')}</a>
                 <a href="#client-projects" className="btn-secondary">{t('hero.projectsCta')}</a>

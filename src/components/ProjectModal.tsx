@@ -25,7 +25,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         <div className="modal-body">
           <div className="modal-header-content">
             <h2>{text.title}</h2>
-            <div className="modal-price">{text.price}</div>
+            {text.price && <div className="modal-price">{text.price}</div>}
           </div>
 
           <div className="modal-problem">

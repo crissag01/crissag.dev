@@ -13,17 +13,15 @@ interface LocalizedList {
 export const translations = {
   hero: {
     title: {
-      en: 'Automation Developer | Business Process Automation | Python, n8n, APIs, JavaScript',
-      es: 'Automation Developer | Automatización de Procesos de Negocio | Python, n8n, APIs, JavaScript'
+      en: 'I automate the repetitive work in your business — invoices, quotes, and notifications running on their own',
+      es: 'Automatizo el trabajo repetitivo de tu negocio: facturas, cotizaciones y notificaciones funcionando solas'
     },
     description: {
-      en: 'I specialize in process automation, API integrations, and custom software solutions. I help businesses cut manual work and streamline operations with technology.',
-      es: 'Especializado en automatización de procesos, integraciones API y desarrollo de soluciones personalizadas. Ayudo a empresas a optimizar sus operaciones con tecnología.'
+      en: 'Automation Developer using n8n, Python, and APIs. I build WhatsApp/Telegram bots and system integrations that cut manual work, then deploy and document them so they keep running.',
+      es: 'Automation Developer con n8n, Python y APIs. Construyo bots de WhatsApp/Telegram e integraciones entre sistemas que eliminan trabajo manual, y los despliego y documento para que sigan funcionando.'
     },
     location: { en: '📍 Monterrey, Nuevo León, Mexico', es: '📍 Monterrey, Nuevo León, México' },
-    statClientProjects: { en: 'Client Projects', es: 'Proyectos de Cliente' },
-    statAvailable: { en: 'Available', es: 'Disponible' },
-    contactCta: { en: 'Contact Me', es: 'Contactar' },
+    contactCta: { en: 'Tell me about your process', es: 'Cuéntame tu proceso' },
     projectsCta: { en: 'View Projects', es: 'Ver Proyectos' },
     freelancerCta: { en: 'Freelancer.com Profile', es: 'Perfil en Freelancer.com' },
     stackHeading: { en: 'My Stack', es: 'Mi Stack' }
@@ -107,8 +105,8 @@ export const translations = {
     },
     practiceHeading: { en: 'Other Builds', es: 'Otros Proyectos' },
     practiceIntro: {
-      en: "Personal and practice projects — not paid client work, but they show the same skills and pricing gives you a rough sense of what a similar build would cost.",
-      es: 'Proyectos personales y de práctica — no son trabajo pagado de un cliente, pero muestran las mismas habilidades y el precio te da una idea aproximada de lo que costaría un proyecto similar.'
+      en: 'Personal and practice projects — not paid client work, but they show the same skills in action.',
+      es: 'Proyectos personales y de práctica — no son trabajo pagado de un cliente, pero muestran las mismas habilidades en acción.'
     },
     viewDetails: { en: 'View Details →', es: 'Ver Detalles →' },
     modal: {
@@ -119,6 +117,16 @@ export const translations = {
       viewOnGithub: { en: 'View on GitHub', es: 'Ver en GitHub' }
     } satisfies Record<string, Localized>
   },
+
+  ctaBand: {
+    heading: { en: 'Have a process that eats your team\'s time?', es: '¿Tienes un proceso que consume el tiempo de tu equipo?' },
+    text: {
+      en: 'Tell me what you do by hand today and I\'ll tell you whether it can be automated and roughly what it would take.',
+      es: 'Cuéntame qué haces a mano hoy y te digo si se puede automatizar y qué implicaría.'
+    },
+    button: { en: 'Request a free assessment', es: 'Pedir una evaluación gratuita' },
+    whatsapp: { en: 'Chat on WhatsApp', es: 'Escríbeme por WhatsApp' }
+  } satisfies Record<string, Localized>,
 
   feedback: {
     heading: { en: 'Visitor Feedback', es: 'Comentarios de Visitantes' },
@@ -203,7 +211,8 @@ export const translations = {
   },
 
   contactSection: {
-    heading: { en: "Let's Connect", es: 'Conectemos' }
+    heading: { en: "Let's Connect", es: 'Conectemos' },
+    whatsapp: { en: 'Prefer WhatsApp? Message me directly →', es: '¿Prefieres WhatsApp? Escríbeme directo →' }
   } satisfies Record<string, Localized>,
 
   footer: {
