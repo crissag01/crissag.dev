@@ -1,6 +1,6 @@
 # Proyectos
 
-Rama dedicada únicamente al código fuente y documentación de los proyectos de práctica que aparecen referenciados en el portafolio ([crissag.dev](https://crissag.dev), rama `main`). No contiene el sitio web — solo el material de origen de cada proyecto.
+Rama dedicada únicamente al código fuente y documentación de los proyectos (de cliente y de práctica) que aparecen referenciados en el portafolio ([crissag.dev](https://crissag.dev), rama `main`). No contiene el sitio web — solo el material de origen de cada proyecto.
 
 ## Estructura
 
@@ -18,7 +18,7 @@ Proyectos/
 
 Workflows de n8n listos para importar, con su documentación de setup:
 
-- **ASSIST CARD** — automatización de cotizaciones (`ASSISTCARD 1 (Recepcion) v2*.json`)
+- **ASSIST CARD** — automatización de cotizaciones (`ASSISTCARD 1 (Recepcion) v2*.json`, `ASSISTCARD 2 - Cotizador API.json`)
 - **Facturas** — distribución por Telegram y WhatsApp (`Facturas (Telegram|Whatsapp)*.json`)
 - **Bitácora (WhatsApp)** — registro de eventos (`Bitacora (Whatsapp).json`)
 - **Organizador de Métricas** — centralización de datos (`Organizador de metricas y respuestas*.json`)

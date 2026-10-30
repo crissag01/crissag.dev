@@ -1,0 +1,195 @@
+{
+  "name": "ASSIST CARD - Cotización de Planes",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1111111-0000-4000-8000-000000000001",
+      "name": "Cuando se ejecuta manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-900, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "c1", "name": "base_url", "value": "https://sandbox.assistcard.com", "type": "string" },
+            { "id": "c2", "name": "country_code", "value": "MX", "type": "string" },
+            { "id": "c3", "name": "agency_code", "value": "YOUR_AGENCY_CODE", "type": "string" },
+            { "id": "c4", "name": "branch_code", "value": 0, "type": "number" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000002",
+      "name": "Config (Punto Emisor)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-680, 220],
+      "notes": "Reemplaza agency_code por tu código de agencia real. base_url apunta a sandbox por defecto; usa la URL de producción cuando esté autorizada."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "t1", "name": "begin_date", "value": "2026-12-01", "type": "string" },
+            { "id": "t2", "name": "end_date", "value": "2026-12-15", "type": "string" },
+            { "id": "t3", "name": "origin", "value": "MTY", "type": "string" },
+            { "id": "t4", "name": "destination", "value": "MAD", "type": "string" },
+            { "id": "t5", "name": "passenger_birthdates", "value": "1990-05-20", "type": "string" },
+            { "id": "t6", "name": "max_usd", "value": "", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000003",
+      "name": "Datos del Viaje",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-680, 400],
+      "notes": "Reemplaza con los datos reales del viaje. passenger_birthdates admite varias fechas separadas por coma (una por pasajero). No tiene conexión de salida: 'Cotizar Planes' lo referencia directo por nombre."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.base_url }}/api/Authentication/login",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"userName\": $vars.ASSISTCARD_USER, \"password\": $vars.ASSISTCARD_PASSWORD } }}",
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000004",
+      "name": "Login",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-460, 220],
+      "notes": "ASSISTCARD_USER y ASSISTCARD_PASSWORD se leen de las variables de entorno de n8n (Settings → Environments → Variables). Nunca se guardan en el workflow."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "tok1", "name": "token", "value": "={{ ($json.data ?? $json).token }}", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000005",
+      "name": "Extraer Token",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-240, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Config (Punto Emisor)').item.json.base_url }}/api/v1/Quote/product",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $json.token }}" },
+            { "name": "Accept", "value": "text/plain" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"countryCode\": $('Config (Punto Emisor)').item.json.country_code,\n  \"agencyCode\": $('Config (Punto Emisor)').item.json.agency_code,\n  \"branchCode\": $('Config (Punto Emisor)').item.json.branch_code,\n  \"beginDate\": $('Datos del Viaje').item.json.begin_date.replace(/-/g, '/'),\n  \"endDate\": $('Datos del Viaje').item.json.end_date.replace(/-/g, '/'),\n  \"travelType\": 1,\n  \"itinerary\": { \"code\": \"AIRPORT\", \"origin\": $('Datos del Viaje').item.json.origin, \"destination\": $('Datos del Viaje').item.json.destination },\n  \"paymentMethod\": \"CheckingAccount\",\n  \"passengers\": $('Datos del Viaje').item.json.passenger_birthdates.split(',').map(d => ({ countryCode: $('Config (Punto Emisor)').item.json.country_code, birthDate: d.trim().replace(/-/g, '/') }))\n} }}",
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000007",
+      "name": "Cotizar Planes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-20, 220],
+      "notes": "Toma el token de su entrada directa (Extraer Token) y los datos del viaje referenciando el nodo 'Datos del Viaje' por nombre."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Reduce la respuesta de Quote/product a lo esencial y aplica el filtro de precio máximo (opcional).\nconst resp = $input.first().json;\nconst maxUsd = parseFloat($('Datos del Viaje').first().json.max_usd || '');\n\nconst planes = (resp.data?.quotedProducts || []).map(p => {\n  const amt = p.amount || {};\n  const loc = p.localAmount || {};\n  return {\n    productCode: p.productCode,\n    rateCode: p.rateCode,\n    name: p.name,\n    modality: p.modality,\n    description: p.rateCaption || p.description,\n    total: amt.total,\n    currency: p.currency,\n    localTotal: loc.total,\n    localCurrency: loc.currency,\n    coberturasPdf: p.coverageDetails,\n  };\n});\n\nconst filtrados = planes\n  .filter(p => !Number.isFinite(maxUsd) || (p.currency === 'USD' && p.total != null && p.total <= maxUsd))\n  .sort((a, b) => (a.total ?? Infinity) - (b.total ?? Infinity));\n\nreturn filtrados.map(p => ({ json: p }));"
+      },
+      "id": "a1111111-0000-4000-8000-000000000008",
+      "name": "Resumir y Filtrar Planes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [200, 220]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            { "id": "cond1", "leftValue": "={{ $items().length }}", "rightValue": 0, "operator": { "type": "number", "operation": "equals" } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-000000000009",
+      "name": "¿Hay planes?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [420, 220]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "e1", "name": "aviso", "value": "Ningún plan cumple los filtros pedidos para este viaje.", "type": "string" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1111111-0000-4000-8000-00000000000a",
+      "name": "Sin Resultados",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [640, 300]
+    }
+  ],
+  "connections": {
+    "Cuando se ejecuta manualmente": {
+      "main": [
+        [
+          { "node": "Config (Punto Emisor)", "type": "main", "index": 0 },
+          { "node": "Datos del Viaje", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Config (Punto Emisor)": {
+      "main": [
+        [{ "node": "Login", "type": "main", "index": 0 }]
+      ]
+    },
+    "Login": {
+      "main": [
+        [{ "node": "Extraer Token", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extraer Token": {
+      "main": [
+        [{ "node": "Cotizar Planes", "type": "main", "index": 0 }]
+      ]
+    },
+    "Cotizar Planes": {
+      "main": [
+        [{ "node": "Resumir y Filtrar Planes", "type": "main", "index": 0 }]
+      ]
+    },
+    "Resumir y Filtrar Planes": {
+      "main": [
+        [{ "node": "¿Hay planes?", "type": "main", "index": 0 }]
+      ]
+    },
+    "¿Hay planes?": {
+      "main": [
+        [{ "node": "Sin Resultados", "type": "main", "index": 0 }],
+        []
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Cotiza planes de Assist Card: login con token, solicitud de cotización por fechas/origen/destino/pasajeros, y filtrado por precio. Credenciales vía variables de entorno de n8n (ASSISTCARD_USER / ASSISTCARD_PASSWORD) — nunca en el workflow. Reemplaza agency_code en 'Config (Punto Emisor)' por tu código real antes de usar."
+  }
+}
