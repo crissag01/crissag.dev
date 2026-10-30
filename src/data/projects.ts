@@ -68,24 +68,68 @@ export const projects: Project[] = [
   },
   {
     id: 1,
-    tier: 'practice',
+    tier: 'client',
     image: '/projects/Assist-Card-Automation.png',
-    technologies: ['n8n', 'JavaScript', 'APIs', 'Webhooks', 'Automatización'],
+    technologies: ['n8n', 'REST API', 'JavaScript', 'Webhooks', 'OAuth2'],
     repoUrl: 'https://github.com/crissag01/crissag.dev/tree/Proyectos/Proyectos/Flujos%20n8n',
     translations: {
       en: {
-        title: 'ASSIST CARD — Quote Automation (practice build)',
-        description: 'Practice workflow automating insurance quote requests',
-        fullDescription: 'An n8n workflow I built to practice processing insurance quote requests end to end: webhooks, data validation, external API calls, and automatic report generation, with retries and error handling.',
-        problem: 'A practice build modeling a pattern common at travel-insurance agencies, where quotes are processed by hand and responses can take 24h+.',
-        useCases: ['Insurance agencies handling 50+ quotes/month', 'Businesses that need near-instant responses', 'Reducing manual back-office workload']
+        title: 'ASSIST CARD — Quote Automation',
+        description: 'n8n workflow that automates travel-assistance quotes through the Assist Card API',
+        fullDescription: 'An n8n workflow that logs into the Assist Card integration API (token auth with automatic refresh), requests a plan quote for a trip (dates, origin, destination, passenger birth dates), and returns the available plans ranked by price with a link to each one\'s coverage PDF. Built so an agent only has to send the trip details once instead of filling out the provider\'s quote form by hand.',
+        problem: 'Quoting travel-assistance plans meant logging into the provider\'s portal and filling out the same form by hand for every traveler configuration — slow when an agency has to compare several plans per request.',
+        useCases: ['Travel agencies quoting several plans per request', 'Connecting a chat or voice assistant to live quotes from a provider API', 'Any workflow that needs safe, read-only access to a third-party quoting API']
       },
       es: {
-        title: 'ASSIST CARD — Automatización de Cotizaciones (proyecto de práctica)',
-        description: 'Flujo de práctica para automatizar solicitudes de cotización de seguros',
-        fullDescription: 'Flujo en n8n que construí para practicar el procesamiento de solicitudes de cotización de seguros de extremo a extremo: webhooks, validación de datos, llamadas a APIs externas y generación automática de reportes, con reintentos y manejo de errores.',
-        problem: 'Proyecto de práctica que modela un patrón común en agencias de seguros de viaje, donde las cotizaciones se procesan a mano y las respuestas pueden tardar 24h+.',
-        useCases: ['Agencias de seguros con 50+ cotizaciones/mes', 'Empresas que necesitan respuestas casi inmediatas', 'Reducir la carga manual de back-office']
+        title: 'ASSIST CARD — Automatización de Cotizaciones',
+        description: 'Flujo de n8n que automatiza cotizaciones de asistencia al viajero con la API de Assist Card',
+        fullDescription: 'Flujo de n8n que inicia sesión en la API de integraciones de Assist Card (autenticación por token con renovación automática), solicita la cotización de planes para un viaje (fechas, origen, destino, fechas de nacimiento de los pasajeros) y devuelve los planes disponibles ordenados por precio con el enlace al PDF de coberturas de cada uno. Pensado para que un agente solo tenga que mandar los datos del viaje una vez, en vez de llenar a mano el formulario de cotización del proveedor.',
+        problem: 'Cotizar planes de asistencia al viajero significaba entrar al portal del proveedor y llenar el mismo formulario a mano por cada configuración de viajeros — lento cuando la agencia tiene que comparar varios planes por solicitud.',
+        useCases: ['Agencias de viajes que cotizan varios planes por solicitud', 'Conectar un asistente de chat o voz a cotizaciones en vivo de la API de un proveedor', 'Cualquier flujo que necesite acceso seguro y de solo lectura a una API de cotización de terceros']
+      }
+    }
+  },
+  {
+    id: 7,
+    tier: 'client',
+    image: '/projects/quote-agent.svg',
+    technologies: ['OpenClaw', 'AI Agents', 'Pipedrive API', 'Telegram Bot', 'RPA'],
+    translations: {
+      en: {
+        title: 'Automated Insurance Quote Agent',
+        description: 'Autonomous agent that quotes auto insurance, compares carriers, and routes for approval',
+        fullDescription: 'An autonomous OpenClaw agent that handles the full quote cycle on a CRM with no API of its own: it logs in, enters the prospect and vehicle data, runs the quote across several insurance carriers, generates a comparison document, and sends it to a human for approval over Telegram — then logs the result back into the sales pipeline. A state machine tracks each deal by its pipeline stage, so scheduled runs never pick up a deal that\'s already in progress, rejections trigger an automatic correct-and-resend cycle, and follow-ups only go out during business hours.',
+        problem: 'Quoting a car insurance policy meant an agent manually re-entering the same prospect and vehicle data into a legacy CRM for every carrier, then building the comparison and chasing approval by hand — slow, repetitive, and easy to lose track of mid-flow.',
+        useCases: ['Insurance agencies quoting multiple carriers per prospect', 'Adding a human-approval gate to an otherwise automated sales step', 'Automating data entry on a legacy system with no API']
+      },
+      es: {
+        title: 'Agente de Cotizaciones de Seguros Automatizado',
+        description: 'Agente autónomo que cotiza seguros de auto, compara aseguradoras y gestiona la aprobación',
+        fullDescription: 'Agente autónomo de OpenClaw que ejecuta el ciclo completo de cotización en un CRM sin API propia: inicia sesión, captura los datos del prospecto y del vehículo, corre la cotización contra varias aseguradoras, genera un comparativo y lo envía a una persona para su aprobación por Telegram — y registra el resultado de vuelta en el pipeline de ventas. Una máquina de estados rastrea cada negociación por su etapa en el pipeline, así las corridas programadas nunca vuelven a tomar una que ya está en proceso, los rechazos disparan un ciclo automático de corrección y reenvío, y los seguimientos solo salen en horario laboral.',
+        problem: 'Cotizar una póliza de auto significaba que una persona volviera a capturar a mano los mismos datos del prospecto y del vehículo en un CRM legado por cada aseguradora, armara el comparativo y diera seguimiento a la aprobación manualmente — lento, repetitivo y fácil de perder a la mitad.',
+        useCases: ['Agencias de seguros que cotizan varias aseguradoras por prospecto', 'Agregar un punto de aprobación humana a un paso de ventas automatizado', 'Automatizar captura de datos en un sistema legado sin API']
+      }
+    }
+  },
+  {
+    id: 8,
+    tier: 'client',
+    image: '/projects/whatsapp-monitor.svg',
+    technologies: ['Node.js', 'ManyChat API', 'Telegram Bot', 'Monitoring', 'Browser Automation'],
+    translations: {
+      en: {
+        title: 'WhatsApp Chatbot Monitor & Bulk Editor',
+        description: 'Link-health monitoring and bulk message editing for a WhatsApp claims chatbot',
+        fullDescription: 'A monitoring script that checks every document link served by a WhatsApp chatbot (covering claims procedures across 10+ insurance carriers), and alerts the team over Telegram the moment one breaks — instead of finding out from a customer. Paired with a bulk-editor script for the chatbot platform\'s own flow builder, which has no find-and-replace: it walks every carrier branch and updates a given step\'s message in one run instead of editing each one by hand.',
+        problem: 'A chatbot serving claims documents for 10+ insurance carriers had broken links go unnoticed until a customer complained, and updating a shared message meant manually editing the same step across every single carrier branch in the flow builder.',
+        useCases: ['Chatbots or help centers serving many branches of the same document/link structure', 'Catching broken third-party links before customers do', 'Bulk-editing a flow-builder UI that has no native find-and-replace']
+      },
+      es: {
+        title: 'Monitor y Editor Masivo para Chatbot de WhatsApp',
+        description: 'Monitoreo de enlaces y edición masiva de mensajes para un chatbot de siniestros en WhatsApp',
+        fullDescription: 'Script de monitoreo que revisa cada enlace a documentos que sirve un chatbot de WhatsApp (procedimientos de siniestros de 10+ aseguradoras), y avisa al equipo por Telegram en cuanto uno se cae — en vez de enterarse por un cliente. Se complementa con un script de edición masiva para el editor de flujos de la plataforma del chatbot, que no tiene buscar-y-reemplazar: recorre cada rama de aseguradora y actualiza el mensaje de un paso en una sola corrida en vez de editar cada una a mano.',
+        problem: 'Un chatbot que entrega documentos de siniestros para 10+ aseguradoras dejaba pasar enlaces rotos hasta que un cliente se quejaba, y actualizar un mensaje compartido significaba editar a mano el mismo paso en cada rama de aseguradora del editor de flujos.',
+        useCases: ['Chatbots o centros de ayuda con muchas ramas de la misma estructura de documentos/enlaces', 'Detectar enlaces rotos de terceros antes que los clientes', 'Edición masiva de un editor de flujos que no tiene buscar-y-reemplazar nativo']
       }
     }
   },
