@@ -30,14 +30,14 @@ export const projects: Project[] = [
       en: {
         title: 'OpenClaw Configuration & Management',
         description: 'Configuration and management system for OpenClaw',
-        fullDescription: 'A complete configuration solution for OpenClaw with an admin interface. Manages settings, users, permissions, and logs, with real-time validation and change synchronization.',
+        fullDescription: 'A complete configuration solution for OpenClaw with an admin interface. Manages settings, users, permissions, and logs, with real-time validation and change synchronization. Result: fewer configuration mistakes and better control over changes made by the team.',
         problem: "Even with OpenClaw 2.0's improved WebUI, configuring it end-to-end — settings, users, permissions — is still confusing for teams without hands-on experience with the platform.",
         useCases: ['OpenClaw platform administrators', 'Managing multiple users and roles', 'Auditing and logging configuration changes']
       },
       es: {
         title: 'Configuraciones OpenClaw',
         description: 'Sistema de configuración y gestión para OpenClaw',
-        fullDescription: 'Solución completa de configuración para OpenClaw con interfaz administrativa. Permite gestionar parámetros, usuarios, permisos y logs. Incluye validación en tiempo real y sincronización de cambios.',
+        fullDescription: 'Solución completa de configuración para OpenClaw con interfaz administrativa. Permite gestionar parámetros, usuarios, permisos y logs. Incluye validación en tiempo real y sincronización de cambios. Resultado: menos errores de configuración y más control sobre cambios realizados por el equipo.',
         problem: 'Aunque OpenClaw 2.0 mejoró su WebUI, configurarla de punta a punta —parámetros, usuarios, permisos— sigue siendo confuso para equipos sin experiencia práctica con la plataforma.',
         useCases: ['Administradores de plataformas OpenClaw', 'Gestión de múltiples usuarios y roles', 'Auditoría y logs de cambios en configuración']
       }
@@ -53,14 +53,14 @@ export const projects: Project[] = [
       en: {
         title: 'Invoice Capture Automation',
         description: 'n8n workflows that read invoices sent over Telegram/WhatsApp and log them to Google Sheets',
-        fullDescription: 'n8n workflows where the sender just forwards an invoice (PDF or photo) over Telegram or WhatsApp. The file is read with OCR, an OpenAI model extracts the fields into structured data, the row is appended to Google Sheets, and the sender gets an instant confirmation.',
+        fullDescription: 'n8n workflows where the sender just forwards an invoice (PDF or photo) over Telegram or WhatsApp. The file is read with OCR, an OpenAI model extracts the fields into structured data, the row is appended to Google Sheets, and the sender gets an instant confirmation. Result: less manual data entry, fewer transcription mistakes, and immediate receipt confirmation.',
         problem: 'Invoices arrived as files in chat and were typed into spreadsheets by hand — slow, error-prone, and with no confirmation that anything was received.',
         useCases: ['Teams that receive invoices or receipts over chat', 'Bookkeeping that needs data in a spreadsheet, not in screenshots', 'Instant receipt confirmation to the sender']
       },
       es: {
         title: 'Automatización de Captura de Facturas',
         description: 'Flujos de n8n que leen facturas enviadas por Telegram/WhatsApp y las registran en Google Sheets',
-        fullDescription: 'Flujos de n8n donde quien envía solo manda la factura (PDF o foto) por Telegram o WhatsApp. El archivo se lee con OCR, un modelo de OpenAI extrae los campos en datos estructurados, la fila se agrega a Google Sheets y el remitente recibe confirmación al instante.',
+        fullDescription: 'Flujos de n8n donde quien envía solo manda la factura (PDF o foto) por Telegram o WhatsApp. El archivo se lee con OCR, un modelo de OpenAI extrae los campos en datos estructurados, la fila se agrega a Google Sheets y el remitente recibe confirmación al instante. Resultado: menos captura manual, menos errores por transcripción y confirmación inmediata de recibido.',
         problem: 'Las facturas llegaban como archivos por chat y se capturaban a mano en hojas de cálculo: lento, con errores y sin confirmación de recibido.',
         useCases: ['Equipos que reciben facturas o recibos por chat', 'Contabilidad que necesita datos en una hoja, no en capturas', 'Confirmación inmediata de recibido al remitente']
       }
@@ -83,7 +83,7 @@ export const projects: Project[] = [
       es: {
         title: 'ASSIST CARD — Automatización de Cotizaciones',
         description: 'Flujo de n8n que automatiza cotizaciones de asistencia al viajero con la API de Assist Card',
-        fullDescription: 'Flujo de n8n que inicia sesión en la API de integraciones de Assist Card (autenticación por token con renovación automática), solicita la cotización de planes para un viaje (fechas, origen, destino, fechas de nacimiento de los pasajeros) y devuelve los planes disponibles ordenados por precio con el enlace al PDF de coberturas de cada uno. Pensado para que un agente solo tenga que mandar los datos del viaje una vez, en vez de llenar a mano el formulario de cotización del proveedor.',
+        fullDescription: 'Flujo de n8n que inicia sesión en la API de integraciones de Assist Card (autenticación por token con renovación automática), solicita la cotización de planes para un viaje (fechas, origen, destino, fechas de nacimiento de los pasajeros) y devuelve los planes disponibles ordenados por precio con el enlace al PDF de coberturas de cada uno. Pensado para que un agente solo tenga que mandar los datos del viaje una vez, en vez de llenar a mano el formulario de cotización del proveedor. Resultado: comparación más rápida de opciones y menos recaptura de datos por cada solicitud.',
         problem: 'Cotizar planes de asistencia al viajero significaba entrar al portal del proveedor y llenar el mismo formulario a mano por cada configuración de viajeros — lento cuando la agencia tiene que comparar varios planes por solicitud.',
         useCases: ['Agencias de viajes que cotizan varios planes por solicitud', 'Conectar un asistente de chat o voz a cotizaciones en vivo de la API de un proveedor', 'Cualquier flujo que necesite acceso seguro y de solo lectura a una API de cotización de terceros']
       }

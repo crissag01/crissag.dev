@@ -23,12 +23,12 @@ export const translations = {
     location: { en: '📍 Monterrey, Nuevo León, Mexico', es: '📍 Monterrey, Nuevo León, México' },
     contactCta: { en: 'Tell me about your process', es: 'Cuéntame tu proceso' },
     projectsCta: { en: 'View Projects', es: 'Ver Proyectos' },
-    freelancerCta: { en: 'Freelancer.com Profile', es: 'Perfil en Freelancer.com' },
-    stackHeading: { en: 'My Stack', es: 'Mi Stack' }
+    freelancerCta: { en: 'Freelancer.com Profile', es: 'Ver experiencia' },
+    stackHeading: { en: 'What I Deliver', es: 'Lo que Entrego' }
   } satisfies Record<string, Localized>,
 
   about: {
-    heading: { en: 'About Me', es: 'Sobre mí' },
+    heading: { en: 'What Working With Me Looks Like', es: 'Sobre mí' },
     paragraph1: {
       en: "I'm an Automation Developer focused on solving real business problems. I don't just write scripts — I build complete systems that run in production. With Python, n8n, APIs, and modern tooling, I create scalable automations that tie multiple services together.",
       es: 'Soy Automation Developer especializado en resolver problemas reales de negocio. No solo creo scripts, sino sistemas completos que funcionan en producción. Con Python, n8n, APIs y herramientas modernas, construyo automatizaciones escalables que integran múltiples servicios.'
@@ -125,7 +125,7 @@ export const translations = {
       en: 'Tell me what you do by hand today and I\'ll tell you whether it can be automated and roughly what it would take.',
       es: 'Cuéntame qué haces a mano hoy y te digo si se puede automatizar y qué implicaría.'
     },
-    button: { en: 'Request a free assessment', es: 'Pedir una evaluación gratuita' },
+    button: { en: 'Request a free assessment', es: 'Cuéntame tu flujo' },
     whatsapp: { en: 'Chat on WhatsApp', es: 'Escríbeme por WhatsApp' }
   } satisfies Record<string, Localized>,
 
